@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <!-- $version$ -->
+    <title>$title$</title>
+    <authors>Brad Buhrkuhl</authors>
+    <owners>Brad Buhrkuhl</owners>
+    <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Windows desktop (WPF) MVVM support library</description>
+    <releaseNotes>Initial Release.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+  </metadata>
+</package>
