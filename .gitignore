@@ -182,3 +182,4 @@ Solution/ThirdParty/AssemblyGuidance-LaserGuide/LASERGUIDESDK-3-04-16/LaserGuide
 Solution/ThirdParty/AssemblyGuidance-LaserGuide/LASERGUIDESDK-3-04-16/LaserGuide Software Development Kit 3.4.16.doc
 Solution/ThirdParty/AssemblyGuidance-LaserGuide/LASERGUIDESDK-3-04-16/LaserGuide.dll
 Solution/ThirdParty/AssemblyGuidance-LaserGuide/LASERGUIDESDK-3-04-16/TestDLL.exe
+*.nupkg

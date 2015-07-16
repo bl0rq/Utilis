@@ -97,7 +97,7 @@ namespace Utilis.UI.Win
             {
                 Messaging.Bus.Instance.Send ( new Messaging.AppStartedMessage ( ) );
 
-                await Start();
+                Runner.RunAsync ( ( ) => Start ( ) );
             }
         }
 

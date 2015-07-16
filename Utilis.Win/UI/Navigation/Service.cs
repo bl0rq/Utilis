@@ -38,16 +38,25 @@ namespace Utilis.UI.Navigation.Win
             m_frame.GoForward ( );
         }
 
-        public Task<bool> Navigate<T_VM> ( T_VM parameter = default(T_VM) ) where T_VM : ViewModel.Base
+        public async Task<bool> Navigate<T_VM> ( T_VM parameter = default(T_VM) ) where T_VM : ViewModel.Base
         {
-            var viewObject = Activator.CreateInstance ( m_viewMapper.GetView<T_VM> ( ) );
-            var view = Contract.AssertIsType<IView> ( ( ) => viewObject, viewObject );
+            var viewType = m_viewMapper.GetView<T_VM> ( );
+            if ( viewType == null )
+                throw new Exception ( "Unable to find view for ViewModel type '" + typeof ( T_VM ).Name + "'." );
 
-            view.ViewModelObject = parameter;
-            CurrentViewModel = parameter;
+            bool navResult = false;
 
-            return Task.FromResult (
-                m_frame.Navigate ( view ) );
+            await Runner.RunOnDispatcherThread ( ( ) =>
+            {
+                var viewObject = Activator.CreateInstance ( viewType );
+                var view = Contract.AssertIsType<IView> ( ( ) => viewObject, viewObject );
+
+                view.ViewModelObject = parameter;
+                CurrentViewModel = parameter;
+
+                navResult = m_frame.Navigate ( view );
+            } );
+            return navResult;
         }
 
         public event Action Navigated;
