@@ -66,7 +66,7 @@ namespace Utilis.ObjectModel
             {
                 var dlgCollectionChangedDispatcher = CollectionChangedDispatcher;
                 if ( dlgCollectionChangedDispatcher != null )
-                    Runner.RunOnDispatcherThread ( ( ) => dlgCollectionChangedDispatcher ( this, e ) ).Wait ( ); // go sync here to ensure we do not continue until things have been processed
+                    Runner.RunOnDispatcherThreadBlocking ( ( ) => dlgCollectionChangedDispatcher ( this, e ) ); // go sync here to ensure we do not continue until things have been processed
 
                 var dlgCollectionChangedNormal = CollectionChangedNormal;
                 if ( dlgCollectionChangedNormal != null )

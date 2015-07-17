@@ -68,26 +68,48 @@ namespace Utilis.UI.Navigation
         private ViewModel.Base m_viewModel;
         private bool m_isFirst = true;
 
-        public async Task<bool> Navigate<T_VM> ( T_VM vm = null ) where T_VM : ViewModel.Base
+        public bool Navigate<T_VM> ( T_VM vm = null ) where T_VM : ViewModel.Base
         {
             if ( m_isFirst )
                 m_isFirst = false;
 
             bool navigated = false;
-            await Runner.RunOnDispatcherThread (
+            Runner.RunOnDispatcherThreadBlocking (
                 ( ) =>
                 {
-                    Type viewType = m_viewMapper.GetView<T_VM> ( );
-                    var viewUri = m_typeToUriMapper.Map ( viewType );
+                    navigated = NavigateCore ( vm );
+                } );
 
-                    if ( m_frame.Navigate ( viewUri ) )
-                    {
-                        m_lastUri = viewUri;
-                        m_viewModel = vm;
-                        CurrentViewModel = vm;
-                        navigated = true;
-                        DoNavigated ( );
-                    }
+            return navigated;
+        }
+
+        private bool NavigateCore<T_VM> ( T_VM vm ) where T_VM : ViewModel.Base
+        {
+            bool navigated = false;
+            Type viewType = m_viewMapper.GetView<T_VM> ( );
+            var viewUri = m_typeToUriMapper.Map ( viewType );
+
+            if ( m_frame.Navigate ( viewUri ) )
+            {
+                m_lastUri = viewUri;
+                m_viewModel = vm;
+                CurrentViewModel = vm;
+                navigated = true;
+                DoNavigated ( );
+            }
+            return navigated;
+        }
+
+        public async Task<bool> NavigateAsync<T_VM> ( T_VM vm = null ) where T_VM : ViewModel.Base
+        {
+            if ( m_isFirst )
+                m_isFirst = false;
+
+            bool navigated = false;
+            await Runner.RunOnDispatcherThreadAsync (
+                ( ) =>
+                {
+                    navigated = NavigateCore ( vm );
                 } );
 
             return navigated;

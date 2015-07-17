@@ -59,22 +59,40 @@ namespace Utilis.UI.Navigation
             m_frame.GoForward ( );
         }
 
-        public async Task<bool> Navigate<T_VM> ( T_VM parameter = null ) where T_VM : ViewModel.Base
+        public async Task<bool> NavigateAsync<T_VM>(T_VM parameter = default(T_VM)) where T_VM : ViewModel.Base
         {
             bool result = false;
             //TODO: abstract this
-            await m_frame.Dispatcher.RunAsync ( Windows.UI.Core.CoreDispatcherPriority.Normal, ( ) =>
+            await Runner.RunOnDispatcherThreadAsync ( ( ) =>
             {
-                CurrentViewModel = parameter;
-
-                var viewModelType = typeof ( T_VM );
-
-                var viewType = m_vm.GetView<T_VM> ( );
-                if ( viewType == null )
-                    throw new NavigationException ( "Unable to find view for type '" + viewModelType.FullName + "'." );
-
-                result = m_frame.Navigate ( viewType, parameter );
+                result = NavigateCore ( parameter );
             } );
+            return result;
+        }
+
+        public bool Navigate<T_VM> ( T_VM parameter = null ) where T_VM : ViewModel.Base
+        {
+            bool result = false;
+            //TODO: abstract this
+            Runner.RunOnDispatcherThreadBlocking ( ( ) =>
+                {
+                    result = NavigateCore(parameter);
+                } );
+            return result;
+        }
+
+        private bool NavigateCore<T_VM>(T_VM parameter) where T_VM : ViewModel.Base
+        {
+            bool result;
+            CurrentViewModel = parameter;
+
+            var viewModelType = typeof (T_VM);
+
+            var viewType = m_vm.GetView<T_VM>();
+            if (viewType == null)
+                throw new NavigationException("Unable to find view for type '" + viewModelType.FullName + "'.");
+
+            result = m_frame.Navigate(viewType, parameter);
             return result;
         }
     }

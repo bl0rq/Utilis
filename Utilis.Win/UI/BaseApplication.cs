@@ -126,7 +126,7 @@ namespace Utilis.UI.Win
 
             // MainWindow at this point is the Splash screen and BootStrapper has done its thing to make a new one get shown
             if ( HasSplash )
-                await Runner.RunOnDispatcherThread ( ( ) => { if ( MainWindow != null ) MainWindow.Close ( ); } );
+                await Runner.RunOnDispatcherThreadAsync ( ( ) => { if ( MainWindow != null ) MainWindow.Close ( ); } );
 
             Messaging.Bus.Instance.Send ( new Messaging.StartupCompleteMessage ( ) );
 

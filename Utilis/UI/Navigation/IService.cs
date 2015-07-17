@@ -7,7 +7,8 @@ namespace Utilis.UI.Navigation
 		bool CanGoBack ( );
 		void GoBack ( );
 		void GoForward ( );
-	    System.Threading.Tasks.Task<bool> Navigate<T_VM> ( T_VM parameter = null ) where T_VM : ViewModel.Base;
+		System.Threading.Tasks.Task<bool> NavigateAsync<T_VM> ( T_VM parameter = null ) where T_VM : ViewModel.Base;
+		bool Navigate<T_VM> ( T_VM parameter = null ) where T_VM : ViewModel.Base;
 		event Action Navigated;
 		ViewModel.Base CurrentViewModel { get; }
 	}
