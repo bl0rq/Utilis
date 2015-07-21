@@ -45,7 +45,7 @@ namespace Utilis.Extensions
                 sb.Append ( '\t', ++tabs );
                 sb.Append ( "Inner: " );
                 sb.AppendLine ( inner.InnerException.Message );
-                inner = exception.InnerException;
+                inner = inner.InnerException;
             }
             sb.AppendLine ( exception.StackTrace );
             return sb.ToString ( );

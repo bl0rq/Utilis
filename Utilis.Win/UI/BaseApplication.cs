@@ -85,6 +85,7 @@ namespace Utilis.UI.Win
         protected virtual void HandleException ( Exception ex, string source )
         {
             System.Windows.MessageBox.Show ( "Unhandled exception in " + source + ": " + ex.ToFullString ( ) );
+            Logger.Log ( ex, source + "_UnhandledException" );
             System.Windows.Application.Current.Shutdown ( -1 );
         }
 
@@ -149,13 +150,7 @@ namespace Utilis.UI.Win
             }
             catch ( Exception e )
             {
-                Logger.Log ( e, "Utilis.UI.Win.BaseApplication.Start ( )" );
-                Runner.RunOnDispatcherThreadBlocking (
-                    ( ) =>
-                    {
-                        System.Windows.MessageBox.Show ( "Error in Startup: " + e.Message );
-                        Shutdown ( );
-                    } );
+                HandleException ( e, "BootStrapper StartAsync" );
                 return;
             }
 
