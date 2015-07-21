@@ -38,20 +38,54 @@ namespace Utilis.UI.Win
 
             Runner.Dispatcher = new Utilis.Win.DispatcherWrapper ( Dispatcher );
 
-            Exit += App_Exit;
+            SetupErrorHandling ( );
 
             Startup += App_Startup;
-            DispatcherUnhandledException += BaseApplication_DispatcherUnhandledException;
+            Exit += App_Exit;
 
             Messaging.Bus.Instance.ListenFor ( this );
 
             BootStrapper = CreateMaster ( );
         }
 
-        void BaseApplication_DispatcherUnhandledException ( object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e )
+        private void SetupErrorHandling ( )
         {
-            //TODO: handle this correctly
-            System.Windows.MessageBox.Show ( "Fatal Unhandled Exception: " + e.Exception.Message );
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            System.Windows.Application.Current.Dispatcher.UnhandledException += Dispatcher_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            Utilis.Runner.Error += Runner_Error;
+        }
+
+        void TaskScheduler_UnobservedTaskException ( object sender, UnobservedTaskExceptionEventArgs e )
+        {
+            HandleException ( e.Exception, "Runner" );
+        }
+
+        void Runner_Error ( Exception ex, string context )
+        {
+            HandleException ( ex, "Runner" );
+        }
+
+        void CurrentDomain_UnhandledException ( object sender, UnhandledExceptionEventArgs e )
+        {
+            // So says some guy on the internet:
+            // This cannot be typed to Exception because it's possible to throw objects in .Net that do not derive from System.Exception. This is not possible in C# or VB.Net but it is possible in other CLR based languages. Hence the API must support this possibility and uses the type object.
+            // So while it shouldn't ever be null, it may not in fact be a System.Exception.
+            Exception ex =
+                e.ExceptionObject as Exception
+                ?? new Exception ( "CurrentDomain_UnhandledException's exception is not an exception! ('" + e.ExceptionObject + "')" );
+            HandleException ( ex, "CurrentDomain" );
+        }
+
+        void Dispatcher_UnhandledException ( object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e )
+        {
+            HandleException ( e.Exception, "Dispatcher" );
+        }
+
+        protected virtual void HandleException ( Exception ex, string source )
+        {
+            System.Windows.MessageBox.Show ( "Unhandled exception in " + source + ": " + ex.ToFullString ( ) );
+            System.Windows.Application.Current.Shutdown ( -1 );
         }
 
         private SingletonChecker m_oSingletonChecker;
@@ -97,7 +131,7 @@ namespace Utilis.UI.Win
             {
                 Messaging.Bus.Instance.Send ( new Messaging.AppStartedMessage ( ) );
 
-                Runner.RunAsync ( ( ) => Start ( ) );
+                Runner.RunAsync ( async ( ) => await Start ( ) );
             }
         }
 
@@ -115,13 +149,14 @@ namespace Utilis.UI.Win
             }
             catch ( Exception e )
             {
-                Logger.Log ( e, "Mjorq.Utility.WPF.BaseApplication.Start ( )" );
-                Runner.RunOnDispatcherThread (
+                Logger.Log ( e, "Utilis.UI.Win.BaseApplication.Start ( )" );
+                Runner.RunOnDispatcherThreadBlocking (
                     ( ) =>
                     {
                         System.Windows.MessageBox.Show ( "Error in Startup: " + e.Message );
                         Shutdown ( );
                     } );
+                return;
             }
 
             // MainWindow at this point is the Splash screen and BootStrapper has done its thing to make a new one get shown
