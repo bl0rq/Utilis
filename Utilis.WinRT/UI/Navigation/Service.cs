@@ -12,14 +12,13 @@ namespace Utilis.UI.Navigation
         private readonly IViewMapper m_vm;
         private readonly Func<ViewModel.Base, bool> m_isFirstPage;
 
-        public event Action Navigated;
         public ViewModel.Base CurrentViewModel { get; private set; }
 
+        public event Action Navigated;
         private void DoNavigated ( )
         {
             Action act = Navigated;
-            if ( act != null )
-                act ( );
+            act?.Invoke ( );
         }
 
         public Service ( Windows.UI.Xaml.Controls.Frame frame, IViewMapper vm, Func<ViewModel.Base, bool> isFirstPage )
@@ -54,12 +53,18 @@ namespace Utilis.UI.Navigation
                 CurrentViewModel = content.ViewModelObject;
         }
 
+        public void RemoveBackEntry ( )
+        {
+            if ( CanGoBack ( ) )
+                m_frame.BackStack.RemoveAt ( m_frame.BackStackDepth );
+        }
+
         public void GoForward ( )
         {
             m_frame.GoForward ( );
         }
 
-        public async Task<bool> NavigateAsync<T_VM>(T_VM parameter = default(T_VM)) where T_VM : ViewModel.Base
+        public async Task<bool> NavigateAsync<T_VM> ( T_VM parameter = default ( T_VM ) ) where T_VM : ViewModel.Base
         {
             bool result = false;
             //TODO: abstract this
@@ -76,23 +81,23 @@ namespace Utilis.UI.Navigation
             //TODO: abstract this
             Runner.RunOnDispatcherThreadBlocking ( ( ) =>
                 {
-                    result = NavigateCore(parameter);
+                    result = NavigateCore ( parameter );
                 } );
             return result;
         }
 
-        private bool NavigateCore<T_VM>(T_VM parameter) where T_VM : ViewModel.Base
+        private bool NavigateCore<T_VM> ( T_VM parameter ) where T_VM : ViewModel.Base
         {
             bool result;
             CurrentViewModel = parameter;
 
-            var viewModelType = typeof (T_VM);
+            var viewModelType = typeof ( T_VM );
 
-            var viewType = m_vm.GetView<T_VM>();
-            if (viewType == null)
-                throw new NavigationException("Unable to find view for type '" + viewModelType.FullName + "'.");
+            var viewType = m_vm.GetView<T_VM> ( );
+            if ( viewType == null )
+                throw new NavigationException ( "Unable to find view for type '" + viewModelType.FullName + "'." );
 
-            result = m_frame.Navigate(viewType, parameter);
+            result = m_frame.Navigate ( viewType, parameter );
             return result;
         }
     }

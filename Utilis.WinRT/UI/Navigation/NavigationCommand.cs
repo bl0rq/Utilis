@@ -6,6 +6,23 @@ using System.Threading.Tasks;
 
 namespace Utilis.UI.Navigation
 {
+    public static class NavigationCommands
+    {
+        static NavigationCommands ( )
+        {
+            try
+            {
+                Back = new DelegateCommand ( ( ) => ServiceLocator.Instance?.GetInstance<IService> ( )?.GoBack ( ), ( ) => ServiceLocator.Instance?.GetInstance<IService> ( )?.CanGoBack ( ) ?? true );
+            }
+            catch ( NullReferenceException e )
+            {
+                // this should never actually happen...
+                System.Diagnostics.Debug.WriteLine ( e );
+            }
+        }
+        public static System.Windows.Input.ICommand Back { get; }
+    }
+
     public class NavigationCommand<T> : System.Windows.Input.ICommand where T : ViewModel.Base
     {
         private readonly Func<bool> m_canExecute;
@@ -30,7 +47,9 @@ namespace Utilis.UI.Navigation
 
         public void Execute ( object parameter )
         {
-            ServiceLocator.Instance.GetInstance<Navigation.IService> ( ).Navigate ( m_createViewModel ( ) );
+            var vm = m_createViewModel ( );
+            if ( vm != null )
+                ServiceLocator.Instance.GetInstance<Navigation.IService> ( ).Navigate ( vm );
         }
 
         public void FireCanExecuteChanged ( )
@@ -47,7 +66,7 @@ namespace Utilis.UI.Navigation
         }
     }
 
-    public class NavigationCommandAutoCreate<T> : NavigationCommand<T> where T : ViewModel.Base, new ( )
+    public class NavigationCommandAutoCreate<T> : NavigationCommand<T> where T : ViewModel.Base, new()
     {
         public NavigationCommandAutoCreate ( )
             : base ( ( ) => new T ( ) )

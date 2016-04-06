@@ -32,6 +32,7 @@ namespace Utilis.Messaging
 
         }
 
+
         public void Send<T> ( T message ) where T : IMessage
         {
             Contract.AssertNotNull ( ( ) => message, message );
@@ -76,6 +77,8 @@ namespace Utilis.Messaging
                         message ),
                     null,
                     "BandSox.Utility.Messaging.Bus.Send<T>()" );
+
+            Fabric?.Send ( message );
         }
 
         private void LogMessage<T> ( T message, Array listeners )
@@ -106,7 +109,7 @@ namespace Utilis.Messaging
                 "BandSox.Utility.Messaging.Bus.ListenFor<T>()" );
 
             m_rwlListeners.WriteLocked ( ( ) => m_listenersByMessageType.Add ( typeof ( T ), (object)listener ) );
-
+            Fabric?.AddListener<T> ( );
             return new ListnerDisposer<T> ( listener );
         }
 
@@ -122,6 +125,7 @@ namespace Utilis.Messaging
                 "BandSox.Utility.Messaging.Bus.ListenFor<T>()" );
 
             m_rwlListeners.WriteLocked ( ( ) => m_listenersByMessageType.Remove ( typeof ( T ), listener ) );
+            Fabric?.RemoveListener<T> ( );
         }
 
         private class ListnerDisposer<T> : IDisposable where T : IMessage
@@ -141,6 +145,7 @@ namespace Utilis.Messaging
         }
 
         public bool IsMessageLoggingEnabled { get; set; }
+        public IFabric Fabric { get; set; }
     }
 
     [AttributeUsage ( AttributeTargets.Class, Inherited = false, AllowMultiple = false )]

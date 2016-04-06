@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Utilis.UI.Win
 {
-    public class BaseUserControl<T> : System.Windows.Controls.UserControl, IView<T> where T : ViewModel.Base
+    // removed  IView<T> to make view mapping easier
+    public class BaseUserControl<T> : System.Windows.Controls.UserControl where T : ViewModel.Base
     {
         // Shared between Control and Page
         public BaseUserControl ( )

@@ -54,6 +54,11 @@ namespace Utilis.UI.Navigation
             m_frame.GoBack ( );
         }
 
+        public void RemoveBackEntry ( )
+        {
+            throw new NotImplementedException ( );
+        }
+
         public bool CanGoForward ( )
         {
             return m_frame.CanGoForward;
@@ -120,8 +125,7 @@ namespace Utilis.UI.Navigation
         private void DoNavigated ( )
         {
             var navigated = Navigated;
-            if ( navigated != null )
-                navigated ( );
+            navigated?.Invoke ( );
         }
 
         public ViewModel.Base CurrentViewModel

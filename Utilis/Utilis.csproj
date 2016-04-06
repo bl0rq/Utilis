@@ -54,6 +54,7 @@
     <Compile Include="IDispatcher.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Messaging\Bus.cs" />
+    <Compile Include="Messaging\Fabric.cs" />
     <Compile Include="Messaging\IMessage.cs" />
     <Compile Include="Messaging\Message.cs" />
     <Compile Include="Messaging\StatusMessage.cs" />

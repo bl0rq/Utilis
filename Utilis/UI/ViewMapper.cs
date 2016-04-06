@@ -19,24 +19,30 @@ namespace Utilis.UI
         private Dictionary<Type, Type> m_htTypes;
         private readonly ViewFinder m_viewFinder;
 
-        public ViewMapper ( Assembly ass, ViewFinder viewFinder )
+        public ViewMapper ( ViewFinder viewFinder, params Assembly [] assemblies )
         {
-            Contract.AssertNotNull ( ( ) => ass, ass );
+            Contract.AssertNotEmpty ( ( ) => assemblies, assemblies );
             Contract.AssertNotNull ( ( ) => viewFinder, viewFinder );
 
             m_viewFinder = viewFinder;
 
-            Load ( ass );
+            Load ( assemblies );
         }
 
-        private void Load ( Assembly ass )
+        private void Load ( params Assembly [] assemblies )
         {
             m_htTypes = new Dictionary<Type, Type> ( );
 
-            var foundTypes = m_viewFinder.Find ( ass );
-            foreach ( var foundType in foundTypes )
+            foreach ( var ass in assemblies )
             {
-                m_htTypes [ foundType.B.AsType ( ) ] = foundType.A.AsType ( );
+                var foundTypes = m_viewFinder.Find ( ass );
+                foreach ( var foundType in foundTypes )
+                {
+                    var type = foundType.B.AsType ( );
+                    if ( m_htTypes.ContainsKey ( type ) )
+                        Logger.Log ( Messaging.StatusMessage.Types.Debug, "Overwrite view mapping for type: " + type + " from " + m_htTypes [ type ] + " to " + foundType.A.AsType ( ) );
+                    m_htTypes [ type ] = foundType.A.AsType ( );
+                }
             }
         }
 

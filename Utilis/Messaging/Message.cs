@@ -59,4 +59,14 @@ namespace Utilis.Messaging
     public class FirstWindowLoaded : BaseSyncMessage
     {
     }
+
+    public class LoadingProgress : BaseAsyncMessage
+    {
+        public string Message { get; private set; }
+
+        public LoadingProgress ( string message )
+        {
+            Message = message;
+        }
+    }
 }

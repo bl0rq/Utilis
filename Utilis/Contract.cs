@@ -39,6 +39,12 @@ namespace Utilis
 				throw new AssertionException ( GetPropertyName ( fn ) + " must not be empty." );
 		}
 
+		public static void AssertNotEmpty<T> ( System.Linq.Expressions.Expression<Func<T[]>> fn, T[] items )
+		{
+			if ( items == null || items.Length == 0 )
+				throw new AssertionException ( GetPropertyName ( fn ) + " must not be empty." );
+		}
+
 		public static void Ensure ( bool assertion, string message )
 		{
 			if ( !assertion )
