@@ -15,7 +15,7 @@ namespace Utilis.Extensions
             return ms_cache.GetOrAdd (
                 t,
                 tt =>
-                    typeof ( T )
+                    t
                     .GetTypeInfo ( )
                     .GetCustomAttributes ( true )
                     .OfType<T> ( )
