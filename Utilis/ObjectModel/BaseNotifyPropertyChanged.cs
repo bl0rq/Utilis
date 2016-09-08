@@ -37,7 +37,7 @@ namespace Utilis.ObjectModel
 
         private bool m_isPropertiesChangedDisabled = false;
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        protected void DoPropertyChanged ( System.ComponentModel.PropertyChangedEventArgs e )
+        protected virtual void DoPropertyChanged ( System.ComponentModel.PropertyChangedEventArgs e )
         {
             System.ComponentModel.PropertyChangedEventHandler oHandler = PropertyChanged;
             if ( oHandler != null )
