@@ -12,18 +12,58 @@ namespace Utilis.UI.Navigation.Win
         private readonly IViewMapper m_viewMapper;
         private readonly bool m_isSecondaryWindow;
         private bool m_removeBackStackEntryOnNavigate = false;
+        private bool m_isFirstNavigation = true;
+        private bool m_didIDoThat = false;
 
         public Service ( System.Windows.Controls.Frame frame, IViewMapper viewMapper, bool isSecondaryWindow = false )
         {
             m_frame = frame;
             m_frame.Navigated += m_frame_Navigated;
+            m_frame.Navigating += m_frame_Navigating;
             m_viewMapper = viewMapper;
             m_isSecondaryWindow = isSecondaryWindow;
         }
 
+        private void m_frame_Navigating ( object sender, System.Windows.Navigation.NavigatingCancelEventArgs e )
+        {
+            if ( e.NavigationMode == System.Windows.Navigation.NavigationMode.Back || e.NavigationMode == System.Windows.Navigation.NavigationMode.Forward )
+                CurrentViewModel?.OnNavigatingAway ( e );
+        }
+
         void m_frame_Navigated ( object sender, System.Windows.Navigation.NavigationEventArgs e )
         {
+            //Logger.Log ( Messaging.StatusMessage.Types.Debug, $"m_frame_Navigated.  e.Content: {e.Content}, e.Uri: {e.Uri}, m_didIDoThat: {m_didIDoThat}, m_isFirstNavigation: {m_isFirstNavigation}, Back Stack: {this.BackStackToString ( )}" );
+            if ( !m_didIDoThat )
+            {
+                var view = m_frame.Content as IView;
+                if ( view != null )
+                {
+                    CurrentViewModel = view.ViewModelObject;
+                    view.ViewModelObject?.OnSecondaryNavigation ( );
+                }
+                else
+                {
+                    CurrentViewModel = null;
+                    if ( m_frame.Content != null )
+                        Logger.Log ( Messaging.StatusMessage.Types.Warn, "Unable to cast Navigation Frame's Content to a IView.  Type is '" + m_frame.Content.GetType ( ).FullName + "'" );
+                }
+            }
+            else
+                m_didIDoThat = false;
+
             DoNavigated ( );
+
+            if ( m_isFirstNavigation && CurrentViewModel != null )
+            {
+                //m_removeBackStackEntryOnNavigate = true; // this will cause the first time we get navigated to to remove the previous page which should be a splash/loading page
+                Logger.Log ( Messaging.StatusMessage.Types.Debug, $"Nuking back stack on first run... \r\n{BackStackToString ( )}" );
+
+                m_isFirstNavigation = false;
+                while ( m_frame.CanGoBack )
+                    RemoveBackEntry ( );
+            }
+
+            NavigationCommands.Navigated ( );
         }
 
         public bool CanGoBack ( )
@@ -96,6 +136,7 @@ namespace Utilis.UI.Navigation.Win
             view.ViewModelObject = parameter;
             CurrentViewModel = parameter;
 
+            m_didIDoThat = true;
             navResult = m_frame.Navigate ( view );
             return navResult;
         }
@@ -117,9 +158,27 @@ namespace Utilis.UI.Navigation.Win
 
             if ( m_removeBackStackEntryOnNavigate )
             {
+                Logger.Log ( Messaging.StatusMessage.Types.Debug, "Removing back entry on navigate.  Back Stack: " + BackStackToString ( ) );
                 m_removeBackStackEntryOnNavigate = false;
                 RemoveBackEntry ( );
             }
+        }
+
+        private string BackStackToString ( string separator = "\r\n" )
+        {
+            if ( m_frame == null )
+                return "{null frame}";
+            else if ( m_frame.BackStack == null )
+                return "{null}";
+
+            StringBuilder sb = new StringBuilder ( );
+            int count = 0;
+            foreach ( var o in m_frame.BackStack )
+            {
+                sb.Append ( count ).Append ( " : " ).Append ( o ).Append ( separator );
+                count++;
+            }
+            return sb.ToString ( );
         }
 
         public ViewModel.Base CurrentViewModel { get; private set; }
@@ -129,7 +188,7 @@ namespace Utilis.UI.Navigation.Win
         private void DoPreNavigate ( object vm, Type vmType, object view, Type viewType )
         {
             var preNavigate = PreNavigate;
-            PreNavigate?.Invoke ( vm, vmType, view, viewType );
+            preNavigate?.Invoke ( vm, vmType, view, viewType );
         }
     }
 }

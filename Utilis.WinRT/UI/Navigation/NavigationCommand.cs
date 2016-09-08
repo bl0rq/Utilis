@@ -12,7 +12,9 @@ namespace Utilis.UI.Navigation
         {
             try
             {
-                Back = new DelegateCommand ( ( ) => ServiceLocator.Instance?.GetInstance<IService> ( )?.GoBack ( ), ( ) => ServiceLocator.Instance?.GetInstance<IService> ( )?.CanGoBack ( ) ?? true );
+                Back = new DelegateCommand (
+                    ( ) => ServiceLocator.Instance?.GetInstance<IService> ( )?.GoBack ( ),
+                    ( ) => ServiceLocator.Instance?.GetInstance<IService> ( )?.CanGoBack ( ) ?? true );
             }
             catch ( NullReferenceException e )
             {
@@ -21,21 +23,28 @@ namespace Utilis.UI.Navigation
             }
         }
         public static System.Windows.Input.ICommand Back { get; }
+
+        internal static void Navigated ( )
+        {
+            ( (IDelegateCommand)Back ).FireCanExecuteChanged ( );
+        }
     }
 
     public class NavigationCommand<T> : System.Windows.Input.ICommand where T : ViewModel.Base
     {
         private readonly Func<bool> m_canExecute;
         private readonly Func<T> m_createViewModel;
+        private readonly IService m_service;
 
-        public NavigationCommand ( Func<T> createViewModel )
+        public NavigationCommand ( Func<T> createViewModel, Navigation.IService service = null )
         {
             Contract.AssertNotNull ( ( ) => createViewModel, createViewModel );
             m_createViewModel = createViewModel;
+            m_service = service;
         }
 
-        public NavigationCommand ( Func<T> createViewModel, Func<bool> canExecute )
-            : this ( createViewModel )
+        public NavigationCommand ( Func<T> createViewModel, Func<bool> canExecute, Navigation.IService service = null )
+            : this ( createViewModel, service )
         {
             m_canExecute = canExecute;
         }
@@ -49,7 +58,7 @@ namespace Utilis.UI.Navigation
         {
             var vm = m_createViewModel ( );
             if ( vm != null )
-                ServiceLocator.Instance.GetInstance<Navigation.IService> ( ).Navigate ( vm );
+                ( m_service ?? ServiceLocator.Instance.GetInstance<Navigation.IService> ( ) ).Navigate ( vm );
         }
 
         public void FireCanExecuteChanged ( )
@@ -62,7 +71,7 @@ namespace Utilis.UI.Navigation
         {
             var canExecuteChanged = CanExecuteChanged;
             if ( canExecuteChanged != null )
-                canExecuteChanged ( this, new EventArgs ( ) );
+                Runner.RunOnDispatcherThread ( ( ) => canExecuteChanged ( this, EventArgs.Empty ) );
         }
     }
 

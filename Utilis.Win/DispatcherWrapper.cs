@@ -16,6 +16,8 @@ namespace Utilis.Win
             m_dispatcher = dispatcher;
         }
 
+        public System.Windows.Threading.Dispatcher RealDispatcher => m_dispatcher;
+
         public bool CheckAccess ( )
         {
             return m_dispatcher.CheckAccess ( );

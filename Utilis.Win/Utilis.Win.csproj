@@ -77,9 +77,11 @@
     <Compile Include="Converter\Visibility.cs" />
     <Compile Include="DispatcherWrapper.cs" />
     <Compile Include="Extensions\WinDictionaryExtensions.cs" />
+    <Compile Include="Extensions\WindowExtensions.cs" />
     <Compile Include="NativeMethod\User32.cs" />
     <Compile Include="ObjectModel\ObservableCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\Behavior\PersistLocation.cs" />
     <Compile Include="UI\Decorator\AspectRatioLayout.cs" />
     <Compile Include="UI\BaseApplication.cs" />
     <Compile Include="UI\BaseControl.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="UI\Properties\Glyph.cs" />
     <Compile Include="UI\Properties\Item.cs" />
     <Compile Include="UI\SingletonChecker.cs" />
+    <Compile Include="UI\WindowPlacement.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utilis\Utilis.csproj">

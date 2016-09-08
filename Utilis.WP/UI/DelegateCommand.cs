@@ -95,7 +95,8 @@ namespace Utilis.UI
 		{
 			EventHandler action = CanExecuteChanged;
 			if ( action != null )
-				action ( this, EventArgs.Empty );
+                Runner.RunOnDispatcherThread ( ( ) => action ( this, EventArgs.Empty ) );
+            //action ( this, EventArgs.Empty );
 			//Runner.RunOnDispatcherThread ( ( ) => action ( this, EventArgs.Empty ), System.Windows.Application.Current.Dispatcher );
 		}
 	}

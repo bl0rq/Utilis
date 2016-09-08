@@ -14,6 +14,7 @@ namespace Utilis.UI
     public class DelegateCommand : IDelegateCommand
     {
         public bool Async { get; set; }
+        public IDispatcher Dispatcher { get; set; }
 
         private bool m_bIsExecuting = false;
         private bool IsExecuting
@@ -76,7 +77,15 @@ namespace Utilis.UI
             {
                 IsExecuting = true;
 
-                if ( Async )
+                if ( Dispatcher != null )
+                {
+                    Dispatcher.RunAsync ( ( ) =>
+                     {
+                         m_actExecuteMethod ( );
+                         IsExecuting = false;
+                     } );
+                }
+                else if ( Async )
                     Runner.RunAsync ( m_actExecuteMethod, B => IsExecuting = false );
                 else
                 {
@@ -115,6 +124,7 @@ namespace Utilis.UI
     public class ArgumentDelegateCommand<T> : IDelegateCommand
     {
         public bool Async { get; set; }
+        public IDispatcher Dispatcher { get; set; }
 
         private bool m_bIsExecuting = false;
         private bool IsExecuting
@@ -142,7 +152,7 @@ namespace Utilis.UI
         public ArgumentDelegateCommand ( Action<T> executeMethod, Func<T, bool> canExecuteMethod )
         {
             if ( executeMethod == null )
-                throw new ArgumentNullException ( "executeMethod" );
+                throw new ArgumentNullException ( nameof ( executeMethod ) );
 
             m_actExecuteMethod = executeMethod;
             m_actCanExecuteMethod = canExecuteMethod;
@@ -167,7 +177,12 @@ namespace Utilis.UI
             {
                 IsExecuting = true;
 
-                if ( Async )
+                if ( Dispatcher != null )
+                {
+                    Dispatcher.RunAsync ( ( ) => m_actExecuteMethod ( (T)parameter ) ).Wait ( );
+                    IsExecuting = false;
+                }
+                else if ( Async )
                     Runner.RunAsync ( ( ) => m_actExecuteMethod ( (T)parameter ), B => IsExecuting = false );
                 else
                 {
@@ -185,7 +200,7 @@ namespace Utilis.UI
         {
             EventHandler action = CanExecuteChanged;
             if ( action != null )
-                action ( this, EventArgs.Empty );
+                Runner.RunOnDispatcherThread ( ( ) => action ( this, EventArgs.Empty ) );
             //Runner.RunOnDispatcherThread ( ( ) => action ( this, EventArgs.Empty ), System.Windows.Application.Current.Dispatcher );
         }
     }

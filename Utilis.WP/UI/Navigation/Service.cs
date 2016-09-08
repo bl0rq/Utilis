@@ -88,6 +88,11 @@ namespace Utilis.UI.Navigation
             return navigated;
         }
 
+        public bool NavigateAndRemoveCurrentFromBackStack<T_VM>(T_VM parameter = default(T_VM)) where T_VM : ViewModel.Base
+        {
+            throw new NotImplementedException();
+        }
+
         private bool NavigateCore<T_VM> ( T_VM vm ) where T_VM : ViewModel.Base
         {
             bool navigated = false;

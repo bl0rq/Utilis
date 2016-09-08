@@ -14,6 +14,11 @@ namespace Utilis.UI.Navigation
 
         public ViewModel.Base CurrentViewModel { get; private set; }
 
+        public bool NavigateAndRemoveCurrentFromBackStack<T_VM>(T_VM parameter = default(T_VM)) where T_VM : ViewModel.Base
+        {
+            throw new NotImplementedException();
+        }
+
         public event Action Navigated;
         private void DoNavigated ( )
         {
