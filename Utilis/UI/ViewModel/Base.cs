@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace Utilis.UI.ViewModel
 {
-	public abstract class Base : ObjectModel.BaseNotifyPropertyChanged
-	{
-		
-	}
+    public abstract class Base : ObjectModel.BaseNotifyPropertyChanged
+    {
+        protected internal virtual void OnSecondaryNavigation ( )
+        {
+        }
+
+        protected internal virtual void OnNavigatingAway ( System.ComponentModel.CancelEventArgs e )
+        {
+        }
+    }
 }

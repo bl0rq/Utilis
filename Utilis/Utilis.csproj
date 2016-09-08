@@ -52,6 +52,7 @@
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Extensions\XML.cs" />
     <Compile Include="IDispatcher.cs" />
+    <Compile Include="IKeyValueStore.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Messaging\Bus.cs" />
     <Compile Include="Messaging\Fabric.cs" />
