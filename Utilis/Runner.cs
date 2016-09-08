@@ -69,7 +69,7 @@ namespace Utilis
 
         public static void RunOnDispatcherThread ( Action act )
         {
-            if ( Dispatcher.CheckAccess ( ) )
+            if ( Dispatcher?.CheckAccess ( ) ?? true )
                 RunWrapped ( act );
             else
 #pragma warning disable 4014 // INTENTIONAL "fire and forget"
@@ -79,7 +79,7 @@ namespace Utilis
 
         public static void RunOnDispatcherThreadBlocking ( Action act )
         {
-            if ( Dispatcher.CheckAccess ( ) )
+            if ( Dispatcher?.CheckAccess ( ) ?? true )
                 RunWrapped ( act );
             else
                 Dispatcher.RunAsync ( ( ) => RunWrapped ( act ) ).Wait ( );
@@ -87,7 +87,7 @@ namespace Utilis
 
         public static async Task RunOnDispatcherThreadAsync ( Action act )
         {
-            if ( Dispatcher.CheckAccess ( ) )
+            if ( Dispatcher?.CheckAccess ( ) ?? true )
                 RunWrapped ( act );
             else
                 await Dispatcher.RunAsync ( ( ) => RunWrapped ( act ) );
