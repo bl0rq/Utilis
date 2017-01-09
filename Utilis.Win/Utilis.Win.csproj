@@ -66,6 +66,7 @@
     <Compile Include="..\Utilis.WinRT\UI\Navigation\NavigationCommand.cs">
       <Link>UI\Navigation\NavigationCommand.cs</Link>
     </Compile>
+    <Compile Include="Converter\BoolToBrush.cs" />
     <Compile Include="Converter\DateTime.cs" />
     <Compile Include="Converter\DrawingColorToBrush.cs" />
     <Compile Include="Converter\ImageSource.cs" />
