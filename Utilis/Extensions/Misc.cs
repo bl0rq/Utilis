@@ -37,18 +37,34 @@ namespace Utilis.Extensions
         public static string ToFullString ( this Exception exception )
         {
             StringBuilder sb = new StringBuilder ( );
-            sb.AppendLine ( exception.Message );
+
+            var value = exception.Data [ "MagicNumber" ];
+            if (value != null)
+                sb.Append(exception.Message).Append("(").Append(value).AppendLine(")");
+            else
+                sb.AppendLine(exception.Message);
             var inner = exception;
             int tabs = 0;
             while ( inner.InnerException != null )
             {
                 sb.Append ( '\t', ++tabs );
                 sb.Append ( "Inner: " );
-                sb.AppendLine ( inner.InnerException.Message );
+                value = inner.InnerException.Data [ "MagicNumber" ];
+                if ( value != null )
+                    sb.Append ( exception.Message ).Append ( "(" ).Append ( value ).AppendLine ( ")" );
+                else
+                    sb.AppendLine ( exception.Message );
                 inner = inner.InnerException;
             }
             sb.AppendLine ( exception.StackTrace );
             return sb.ToString ( );
+        }
+
+        public static T AddMagicNumber<T> ( this T ex, ulong magic ) where T : Exception
+        {
+            if ( ex != null )
+                ex.Data [ "MagicNumber" ] = magic;
+            return ex;
         }
     }
 }

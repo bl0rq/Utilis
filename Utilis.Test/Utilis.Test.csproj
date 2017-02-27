@@ -57,6 +57,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BusTest.cs" />
+    <Compile Include="ExceptionExtensionTests.cs" />
     <Compile Include="HasAttributeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
