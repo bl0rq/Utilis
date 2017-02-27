@@ -27,22 +27,28 @@ namespace Utilis
 #endif
 	public static class Contract
 	{
-		public static void AssertNotNull ( System.Linq.Expressions.Expression<Func<object>> ex, object o )
+		public static object AssertNotNull ( System.Linq.Expressions.Expression<Func<object>> ex, object o )
 		{
 			if ( o == null )
 				throw new AssertionException ( GetPropertyName ( ex ) + " must not be null." );
+
+            return o;
 		}
 
-		public static void AssertNotEmpty ( System.Linq.Expressions.Expression<Func<string>> fn, string s )
+		public static string AssertNotEmpty ( System.Linq.Expressions.Expression<Func<string>> fn, string s )
 		{
 			if ( string.IsNullOrEmpty ( s ) )
 				throw new AssertionException ( GetPropertyName ( fn ) + " must not be empty." );
+
+		    return s;
 		}
 
-		public static void AssertNotEmpty<T> ( System.Linq.Expressions.Expression<Func<T[]>> fn, T[] items )
+		public static T[] AssertNotEmpty<T> ( System.Linq.Expressions.Expression<Func<T[]>> fn, T[] items )
 		{
 			if ( items == null || items.Length == 0 )
 				throw new AssertionException ( GetPropertyName ( fn ) + " must not be empty." );
+
+            return items;
 		}
 
 		public static void Ensure ( bool assertion, string message )
