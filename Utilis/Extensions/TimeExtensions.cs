@@ -26,5 +26,22 @@ namespace Utilis.Extensions
             else
                 return Math.Round ( ts.TotalMilliseconds, 1 ) + " ms";
         }
+
+        public static string ToTimestampString(this DateTimeOffset dtm)
+        {
+            var delta = DateTimeOffset.UtcNow - dtm;
+            if ( delta.TotalSeconds <= 0 )
+                return "now";
+            else if ( delta.TotalSeconds <= 120 )
+                return "1 minute ago";
+            else if ( delta.TotalMinutes < 60 )
+                return Math.Round ( delta.TotalMinutes, 0 ) + " minutes ago";
+            else if ( delta.TotalHours < 24 )
+                return Math.Round ( delta.TotalHours, 0 ) + " hours ago";
+            else if ( delta.TotalDays < 60 )
+                return Math.Round ( delta.TotalDays, 0 ) + " days ago";
+            else
+                return (int)( delta.TotalDays / 30 ) + " months ago";
+        }
     }
 }
