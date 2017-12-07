@@ -30,7 +30,7 @@ namespace Utilis.UI.Navigation
         }
     }
 
-    public class NavigationCommand<T> : System.Windows.Input.ICommand where T : ViewModel.Base
+    public class NavigationCommand<T> : ICommand where T : ViewModel.Base
     {
         private readonly Func<bool> m_canExecute;
         private readonly Func<T> m_createViewModel;

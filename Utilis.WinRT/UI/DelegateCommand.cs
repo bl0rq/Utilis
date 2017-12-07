@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace Utilis.UI
 {
-    public interface IDelegateCommand : System.Windows.Input.ICommand
+    public interface ICommand : System.Windows.Input.ICommand
     {
         void FireCanExecuteChanged ( );
+    }
+    public interface IDelegateCommand : ICommand
+    {
     }
 
     public class DelegateCommand : IDelegateCommand
