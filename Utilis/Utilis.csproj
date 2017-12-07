@@ -69,6 +69,7 @@
     <Compile Include="ServiceLocator.cs" />
     <Compile Include="UI\Controller\IBootStrapper.cs" />
     <Compile Include="UI\IView.cs" />
+    <Compile Include="UI\Navigation\FakeNavigationService.cs" />
     <Compile Include="UI\Navigation\IService.cs" />
     <Compile Include="UI\Navigation\NavigationException.cs" />
     <Compile Include="UI\ViewFinder.cs" />
