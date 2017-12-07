@@ -9,8 +9,8 @@
     <owners>Brad Buhrkuhl</owners>
     <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Windows desktop (WPF) MVVM support library</description>
+    <description>Windows desktop (WPF) MVVM support library.  Source can be found at https://github.com/bl0rq/Utilis </description>
     <releaseNotes>Initial Release.</releaseNotes>
-    <copyright>Copyright 2015</copyright>
+    <copyright>Copyright 2017</copyright>
   </metadata>
 </package>
