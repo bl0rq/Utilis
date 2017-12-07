@@ -183,3 +183,4 @@ Solution/ThirdParty/AssemblyGuidance-LaserGuide/LASERGUIDESDK-3-04-16/LaserGuide
 Solution/ThirdParty/AssemblyGuidance-LaserGuide/LASERGUIDESDK-3-04-16/LaserGuide.dll
 Solution/ThirdParty/AssemblyGuidance-LaserGuide/LASERGUIDESDK-3-04-16/TestDLL.exe
 *.nupkg
+.vs/
