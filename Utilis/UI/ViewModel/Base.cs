@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Utilis.UI.ViewModel
 {
+    [System.Runtime.Serialization.DataContract]
     public abstract class Base : ObjectModel.BaseNotifyPropertyChanged
     {
         protected internal virtual void OnSecondaryNavigation ( )
