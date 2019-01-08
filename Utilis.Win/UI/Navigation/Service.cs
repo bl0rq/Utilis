@@ -131,6 +131,14 @@ namespace Utilis.UI.Navigation.Win
             var viewObject = Activator.CreateInstance ( viewType );
             var view = Contract.AssertIsType<IView> ( ( ) => viewObject, viewObject );
 
+            if ( CurrentViewModel != null )
+            {
+                System.ComponentModel.CancelEventArgs e = new System.ComponentModel.CancelEventArgs ( );
+                CurrentViewModel?.OnNavigatingAway ( e );
+                if ( e.Cancel )
+                    return false;
+            }
+
             DoPreNavigate ( parameter, typeof ( T_VM ), view, viewType );
 
             view.ViewModelObject = parameter;
