@@ -29,6 +29,10 @@ namespace Utilis.UI.Win
         {
         }
 
+        protected virtual void OnViewModelSet ( T oldValue, T newValue )
+        {
+        }
+
         private bool m_inViewModelSet = false;
         private T m_viewModel;
         public T ViewModel
@@ -36,6 +40,8 @@ namespace Utilis.UI.Win
             get { return m_viewModel; }
             set
             {
+                var oldValue = m_viewModel;
+
                 m_viewModel = value;
 
                 m_inViewModelSet = true;
@@ -43,6 +49,7 @@ namespace Utilis.UI.Win
                 m_inViewModelSet = false;
 
                 OnViewModelSet ( );
+                OnViewModelSet ( oldValue, value );
             }
         }
 
