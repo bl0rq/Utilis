@@ -56,5 +56,38 @@ namespace Utilis.UI.Win.Properties
                 typeof ( System.Windows.Media.Brush ),
                 typeof ( Glyph ),
                 new System.Windows.PropertyMetadata ( null ) );
+
+
+        public static System.Windows.Media.Color GetFillColor ( System.Windows.DependencyObject obj )
+        {
+            return (System.Windows.Media.Color)obj.GetValue ( FillColorProperty );
+        }
+
+        public static void SetFillColor ( System.Windows.DependencyObject obj, System.Windows.Media.Color value )
+        {
+            obj.SetValue ( FillColorProperty, value );
+        }
+        public static readonly System.Windows.DependencyProperty FillColorProperty =
+            System.Windows.DependencyProperty.RegisterAttached (
+                "FillColor",
+                typeof ( System.Windows.Media.Color ),
+                typeof ( Glyph ),
+                new System.Windows.PropertyMetadata ( null ) );
+
+        public static System.Windows.Media.Color GetStrokeColor ( System.Windows.DependencyObject obj )
+        {
+            return (System.Windows.Media.Color)obj.GetValue ( StrokeColorProperty );
+        }
+
+        public static void SetStrokeColor ( System.Windows.DependencyObject obj, System.Windows.Media.Color value )
+        {
+            obj.SetValue ( StrokeColorProperty, value );
+        }
+        public static readonly System.Windows.DependencyProperty StrokeColorProperty =
+            System.Windows.DependencyProperty.RegisterAttached (
+                "StrokeColor",
+                typeof ( System.Windows.Media.Color ),
+                typeof ( Glyph ),
+                new System.Windows.PropertyMetadata ( null ) );
     }
 }
