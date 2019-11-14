@@ -51,9 +51,9 @@ namespace Utilis.Extensions
                 sb.Append ( "Inner: " );
                 value = inner.InnerException.Data [ "MagicNumber" ];
                 if ( value != null )
-                    sb.Append ( exception.Message ).Append ( "(" ).Append ( value ).AppendLine ( ")" );
+                    sb.Append ( inner.InnerException.Message ).Append ( "(" ).Append ( value ).AppendLine ( ")" );
                 else
-                    sb.AppendLine ( exception.Message );
+                    sb.AppendLine ( inner.InnerException.Message );
                 inner = inner.InnerException;
             }
             sb.AppendLine ( exception.StackTrace );
