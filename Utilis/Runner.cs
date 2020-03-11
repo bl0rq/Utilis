@@ -77,12 +77,39 @@ namespace Utilis
 #pragma warning restore 4014
         }
 
-        public static void RunOnDispatcherThreadBlocking ( Action act )
+        public static void RunOnDispatcherThreadBlocking ( Action act, Action taskCanced = null )
         {
             if ( Dispatcher?.CheckAccess ( ) ?? true )
                 RunWrapped ( act );
             else
-                Dispatcher.RunAsync ( ( ) => RunWrapped ( act ) ).Wait ( );
+            {
+                try
+                {
+                    Dispatcher.RunAsync ( ( ) => RunWrapped ( act ) ).Wait ( );
+                }
+                catch ( AggregateException ae )
+                {
+                    if ( ae.InnerExceptions != null && ae.InnerExceptions.OfType<TaskCanceledException> ( ).Any ( ) )
+                    {
+                        if ( taskCanced != null )
+                            taskCanced ( );
+                        else
+                            throw;
+                    }
+                    else if ( !DoError ( ae, "Runner.RunOnDispatcherThreadBlocking" ) )
+                        throw;
+                }
+                catch ( TaskCanceledException )
+                {
+                    if ( taskCanced != null )
+                        taskCanced ( );
+                }
+                catch ( Exception ex )
+                {
+                    if ( !DoError ( ex, "Runner.RunOnDispatcherThreadBlocking" ) )
+                        throw;
+                }
+            }
         }
 
         public static async Task RunOnDispatcherThreadAsync ( Action act )

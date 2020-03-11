@@ -39,10 +39,12 @@ namespace Utilis.Extensions
             StringBuilder sb = new StringBuilder ( );
 
             var value = exception.Data [ "MagicNumber" ];
-            if (value != null)
-                sb.Append(exception.Message).Append("(").Append(value).AppendLine(")");
+            if ( value != null )
+                sb.Append ( exception.Message ).Append ( "(" ).Append ( value ).Append ( ")" );
             else
-                sb.AppendLine(exception.Message);
+                sb.Append ( exception.Message );
+            sb.Append ( " [" ).Append ( exception.GetType ( ).FullName ).AppendLine ( "]" );
+
             var inner = exception;
             int tabs = 0;
             while ( inner.InnerException != null )
@@ -51,9 +53,10 @@ namespace Utilis.Extensions
                 sb.Append ( "Inner: " );
                 value = inner.InnerException.Data [ "MagicNumber" ];
                 if ( value != null )
-                    sb.Append ( inner.InnerException.Message ).Append ( "(" ).Append ( value ).AppendLine ( ")" );
+                    sb.Append ( inner.InnerException.Message ).Append ( "(" ).Append ( value ).Append ( ")" );
                 else
-                    sb.AppendLine ( inner.InnerException.Message );
+                    sb.Append ( inner.InnerException.Message );
+                sb.Append ( " [" ).Append ( inner.InnerException.GetType ( ).FullName ).AppendLine ( "]" );
                 inner = inner.InnerException;
             }
             sb.AppendLine ( exception.StackTrace );
