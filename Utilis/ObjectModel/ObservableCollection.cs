@@ -5,15 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Utilis.Extensions;
 
-// This was causing stupid issues.  No clue how or why.
-//namespace System.Collections.Specialized
-//{
-//    // why did this damn thing not exist?!?
-//    public interface INotifyCollectionChanged<T> : ICollection<T>, INotifyCollectionChanged
-//    {
-
-//    }
-//}
 namespace Utilis.ObjectModel
 {
     public interface INotifyCollectionChanged<T> : ICollection<T>, System.Collections.Specialized.INotifyCollectionChanged, System.ComponentModel.INotifyPropertyChanged
@@ -124,7 +115,7 @@ namespace Utilis.ObjectModel
             }
         }
 
-        protected bool SetProperty<T> ( ref T oldValue, T newValue, [System.Runtime.CompilerServices.CallerMemberName] string propertyName = "" )
+        protected bool SetProperty<T_P> ( ref T_P oldValue, T_P newValue, [System.Runtime.CompilerServices.CallerMemberName] string propertyName = "" )
         {
             bool areDifferent = !object.Equals ( oldValue, newValue );
             oldValue = newValue;
@@ -136,7 +127,7 @@ namespace Utilis.ObjectModel
 
             return areDifferent;
         }
-        protected void OnPropertyChanged<T> ( System.Linq.Expressions.Expression<Func<T>> exp )
+        protected void OnPropertyChanged<T_P> ( System.Linq.Expressions.Expression<Func<T_P>> exp )
         {
             OnPropertyChanged ( exp.GetName ( ) );
         }

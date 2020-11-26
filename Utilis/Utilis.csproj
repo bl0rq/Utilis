@@ -38,6 +38,7 @@
       <Compile Include="Messaging\StatusMessage.cs" />
       <Compile Include="ObjectModel\BaseNotifyPropertyChanged.cs" />
       <Compile Include="ObjectModel\ConcurrentCache.cs" />
+      <Compile Include="ObjectModel\ObservableCollection.cs" />
       <Compile Include="ObjectModel\Singleton.cs" />
       <Compile Include="Pair.cs" />
       <Compile Include="RegisterServiceAttribute.cs" />

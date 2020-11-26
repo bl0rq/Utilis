@@ -104,7 +104,6 @@
     <Compile Include="Extensions\WinDictionaryExtensions.cs" />
     <Compile Include="Extensions\WindowExtensions.cs" />
     <Compile Include="NativeMethod\User32.cs" />
-    <Compile Include="ObjectModel\ObservableCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Behavior\PersistLocation.cs" />
     <Compile Include="UI\Decorator\AspectRatioLayout.cs" />
