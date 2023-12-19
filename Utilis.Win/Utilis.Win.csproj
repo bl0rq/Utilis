@@ -1,26 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <OutputType>Library</OutputType>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <UseWPF>true</UseWPF>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Utilis\Utilis.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.0.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <OutputType>Library</OutputType>
+        <UseWPF>true</UseWPF>
+        <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+        <Authors>Brad Buhrkuhl</Authors>
+        <Company>Blorq Industries</Company>
+        <Description>Basic utility-level functions, mostly in support of a MVVM pattern for Desktop, Windows Store, and Windows Phone applications.  Source can be found at https://github.com/bl0rq/Utilis</Description>
+        <PackageLicenseExpression>http://opensource.org/licenses/MS-PL</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/bl0rq/Utilis</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/bl0rq/Utilis</RepositoryUrl>
+        <Version>0.9.0.98</Version>
+        <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Utilis\Utilis.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Autofac"
+                          Version="6.0.0" />
+        <PackageReference Include="Microsoft.CSharp"
+                          Version="4.7.0" />
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf"
+                          Version="1.1.77" />
+        <PackageReference Include="System.Data.DataSetExtensions"
+                          Version="4.5.0" />
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces"
+                          Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"
+                          Version="8.0.0" />
+        <PackageReference Include="System.Diagnostics.DiagnosticSource"
+                          Version="8.0.0" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe"
+                          Version="6.0.0" />
+    </ItemGroup>
 </Project>
