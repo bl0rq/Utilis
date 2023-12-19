@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 using Utilis.Extensions;
@@ -8,7 +9,8 @@ using Utilis.Win.Extensions;
 
 namespace Utilis.Win.UI.Behavior
 {
-    public class PersistLocation : System.Windows.Interactivity.Behavior<System.Windows.Window>
+    [SupportedOSPlatform ( "windows" )]
+    public class PersistLocation : Microsoft.Xaml.Behaviors.Behavior<System.Windows.Window>
     {
         protected override void OnAttached ( )
         {

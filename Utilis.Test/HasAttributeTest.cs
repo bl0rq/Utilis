@@ -3,27 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Utilis.Extensions;
 
 namespace Utilis.Test
 {
-    [TestClass]
+    [TestFixture]
     public class HasAttributeTest
     {
-        [TestMethod]
+        [Test]
         public void TestClass ( )
         {
             Assert.IsTrue ( typeof ( Foo ).HasAttribute<System.Runtime.Serialization.DataContractAttribute> ( ) );
         }
 
-        [TestMethod]
+        [Test]
         public void TestField ( )
         {
             Assert.IsTrue ( typeof ( Foo ).GetField ( "Bar" ).HasAttribute<NonSerializedAttribute> ( ) );
         }
 
-        [TestMethod]
+        [Test]
         public void TestProperty ( )
         {
             Assert.IsTrue ( typeof ( Foo ).GetProperty ( "Blah" ).HasAttribute<System.Runtime.Serialization.DataMemberAttribute> ( ) );

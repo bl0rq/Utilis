@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Utilis.UI.Win.Behavior
 {
-    public class DoubleClick : System.Windows.Interactivity.Behavior<System.Windows.Controls.ItemsControl>
+    [SupportedOSPlatform ( "windows" )]
+    public class DoubleClick : Microsoft.Xaml.Behaviors.Behavior<System.Windows.Controls.ItemsControl>
     {
         public System.Windows.Input.ICommand Command
         {

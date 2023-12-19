@@ -1,69 +1,68 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <Authors>Brad Buhrkuhl</Authors>
-        <Company>Blorq Industries</Company>
-        <Description>Basic utility-level functions, mostly in support of a MVVM pattern for Desktop, Windows Store, and Windows Phone applications.  Source can be found at https://github.com/bl0rq/Utilis</Description>
-        <PackageLicenseExpression>http://opensource.org/licenses/MS-PL</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/bl0rq/Utilis</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/bl0rq/Utilis</RepositoryUrl>
-        <Version>0.9.0.96</Version>
-        <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <Compile Include="CommonServiceLocator.cs" />
-      <Compile Include="Extensions\AutofacAutoRegistra.cs" />
-      <Compile Include="Contract.cs" />
-      <Compile Include="Extensions\Collection.cs" />
-      <Compile Include="Extensions\Dictionary.cs" />
-      <Compile Include="Extensions\ExpressionExtensions.cs" />
-      <Compile Include="Extensions\IoExtensions.cs" />
-      <Compile Include="Extensions\Misc.cs" />
-      <Compile Include="Extensions\PropertyChangedEventArgsExtensions.cs" />
-      <Compile Include="Extensions\Random.cs" />
-      <Compile Include="Extensions\ReaderWriterLockExtensions.cs" />
-      <Compile Include="Extensions\String.cs" />
-      <Compile Include="Extensions\TimeExtensions.cs" />
-      <Compile Include="Extensions\TypeExtensions.cs" />
-      <Compile Include="Extensions\XML.cs" />
-      <Compile Include="IDispatcher.cs" />
-      <Compile Include="IKeyValueStore.cs" />
-      <Compile Include="Logger.cs" />
-      <Compile Include="Messaging\Bus.cs" />
-      <Compile Include="Messaging\Fabric.cs" />
-      <Compile Include="Messaging\IMessage.cs" />
-      <Compile Include="Messaging\Message.cs" />
-      <Compile Include="Messaging\StatusMessage.cs" />
-      <Compile Include="ObjectModel\BaseNotifyPropertyChanged.cs" />
-      <Compile Include="ObjectModel\ConcurrentCache.cs" />
-      <Compile Include="ObjectModel\ObservableCollection.cs" />
-      <Compile Include="ObjectModel\Singleton.cs" />
-      <Compile Include="Pair.cs" />
-      <Compile Include="RegisterServiceAttribute.cs" />
-      <Compile Include="Runner.cs" />
-      <Compile Include="ServiceLocator.cs" />
-      <Compile Include="UI\Controller\IBootStrapper.cs" />
-      <Compile Include="UI\IView.cs" />
-      <Compile Include="UI\Navigation\FakeNavigationService.cs" />
-      <Compile Include="UI\Navigation\IService.cs" />
-      <Compile Include="UI\Navigation\NavigationException.cs" />
-      <Compile Include="UI\ViewFinder.cs" />
-      <Compile Include="UI\ViewMapper.cs" />
-      <Compile Include="UI\ViewModel\Base.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Autofac" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-        <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
-    </ItemGroup>
-
-    <ItemGroup Label="Expose internal test hooks to Unit Test projects">
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-            <_Parameter1>Utilis.Win</_Parameter1>
-        </AssemblyAttribute>
-    </ItemGroup>
-
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Authors>Brad Buhrkuhl</Authors>
+    <Company>Blorq Industries</Company>
+    <Description>Basic utility-level functions, mostly in support of a MVVM pattern for Desktop, Windows Store, and Windows Phone applications.  Source can be found at https://github.com/bl0rq/Utilis</Description>
+    <PackageLicenseExpression>http://opensource.org/licenses/MS-PL</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/bl0rq/Utilis</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bl0rq/Utilis</RepositoryUrl>
+    <Version>0.9.0.98</Version>
+    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Utilis.WinRT\UI\DelegateCommand.cs" Link="UI\DelegateCommand.cs" />
+    <Compile Include="..\Utilis.WinRT\UI\Navigation\NavigationCommand.cs" Link="UI\Navigation\NavigationCommand.cs" />
+    <Compile Include="CommonServiceLocator.cs" />
+    <Compile Include="Extensions\AutofacAutoRegistra.cs" />
+    <Compile Include="Contract.cs" />
+    <Compile Include="Extensions\Collection.cs" />
+    <Compile Include="Extensions\Dictionary.cs" />
+    <Compile Include="Extensions\ExpressionExtensions.cs" />
+    <Compile Include="Extensions\IoExtensions.cs" />
+    <Compile Include="Extensions\Misc.cs" />
+    <Compile Include="Extensions\PropertyChangedEventArgsExtensions.cs" />
+    <Compile Include="Extensions\Random.cs" />
+    <Compile Include="Extensions\ReaderWriterLockExtensions.cs" />
+    <Compile Include="Extensions\String.cs" />
+    <Compile Include="Extensions\TimeExtensions.cs" />
+    <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="Extensions\XML.cs" />
+    <Compile Include="IDispatcher.cs" />
+    <Compile Include="IKeyValueStore.cs" />
+    <Compile Include="LocalDataKeyValueStore.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="Messaging\Bus.cs" />
+    <Compile Include="Messaging\Fabric.cs" />
+    <Compile Include="Messaging\IMessage.cs" />
+    <Compile Include="Messaging\Message.cs" />
+    <Compile Include="Messaging\StatusMessage.cs" />
+    <Compile Include="ObjectModel\BaseNotifyPropertyChanged.cs" />
+    <Compile Include="ObjectModel\ConcurrentCache.cs" />
+    <Compile Include="ObjectModel\ObservableCollection.cs" />
+    <Compile Include="ObjectModel\Singleton.cs" />
+    <Compile Include="Pair.cs" />
+    <Compile Include="RegisterServiceAttribute.cs" />
+    <Compile Include="Runner.cs" />
+    <Compile Include="ServiceLocator.cs" />
+    <Compile Include="UI\Controller\IBootStrapper.cs" />
+    <Compile Include="UI\IView.cs" />
+    <Compile Include="UI\Navigation\FakeNavigationService.cs" />
+    <Compile Include="UI\Navigation\IService.cs" />
+    <Compile Include="UI\Navigation\NavigationException.cs" />
+    <Compile Include="UI\ViewFinder.cs" />
+    <Compile Include="UI\ViewMapper.cs" />
+    <Compile Include="UI\ViewModel\Base.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup Label="Expose internal test hooks to Unit Test projects">
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Utilis.Win</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>

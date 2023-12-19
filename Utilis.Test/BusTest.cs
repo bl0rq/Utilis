@@ -1,12 +1,12 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Utilis.Test
 {
-    [TestClass]
+    [TestFixture]
     public class BusTest
     {
-        [TestMethod]
+        [Test]
         public void TestBasicSend ( )
         {
             var busCounter = new BusCountListener<JunkMessage> ( );
