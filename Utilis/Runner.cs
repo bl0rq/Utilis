@@ -30,7 +30,8 @@ namespace Utilis
         static Runner ( )
         {
             AsyncEnabled = true;
-            AsyncCall = ( act, callback ) => act.BeginInvoke ( callback, null );
+            //AsyncCall = ( act, callback ) => act.BeginInvoke ( callback, null );
+            AsyncCall = ( act, callback ) => Task.Run(act).ContinueWith(t => callback?.Invoke(t));
         }
 
         public static void RunAsync ( Action act, AsyncCallback callback = null )
