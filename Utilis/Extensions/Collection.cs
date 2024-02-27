@@ -92,8 +92,37 @@ namespace Utilis.Extensions
 				arr.Remove ( oToRemove );
 			}
 		}
+        public static T[] Remove<T> ( this T[] arr, T item ) where T : class
+        {
+			int foundAt = -1;
+			for ( int i = 0 ; i < arr.Length ; i++ )
+			{
+                if ( arr [ i ] == item )
+				{
+					foundAt = 0; 
+					break;
+				}
+			}
 
-		public static IEnumerable<T> Insert<T> ( this IEnumerable<T> aOriginal, int nInsertIndex, IEnumerable<T> aNew )
+			if ( foundAt == -1 )
+				return arr;
+			else
+			{
+				T [] newArr = new T [ arr.Length - 1 ];
+				for ( int i = 0 ; i < foundAt ; i++ )
+				{
+					newArr [ i ] = arr [ i ];
+				}
+
+                for ( int i = foundAt + 1 ; i < newArr.Length ; i++ )
+                {
+                    newArr [ i - 1 ] = arr [ i ];
+                }
+
+				return newArr;
+            }
+        }
+        public static IEnumerable<T> Insert<T> ( this IEnumerable<T> aOriginal, int nInsertIndex, IEnumerable<T> aNew )
 		{
 			var aOriginalEnumerator = aOriginal.GetEnumerator ( );
 
