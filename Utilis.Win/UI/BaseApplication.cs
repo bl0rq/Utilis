@@ -132,7 +132,18 @@ namespace Utilis.UI.Win
             {
                 Messaging.Bus.Instance.Send ( new Messaging.AppStartedMessage ( ) );
 
-                Runner.RunAsync ( async ( ) => await Start ( ) );
+                var startTask = Task.Run ( ( ) => Start ( ) ).ContinueWith ( task =>
+                {
+                    if ( task.IsFaulted )
+                    {
+                        // Handle the exception, possibly on the UI thread
+                        System.Windows.Application.Current.Dispatcher.Invoke ( ( ) =>
+                        {
+                            // Handle exception in UI context
+                        } );
+                    }
+                } );
+                //Runner.RunAsync ( async ( ) => await Start ( ) );
             }
         }
 
