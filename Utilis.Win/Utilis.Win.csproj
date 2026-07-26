@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0-windows</TargetFramework>
+        <TargetFramework>net10.0-windows</TargetFramework>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <OutputType>Library</OutputType>
         <UseWPF>true</UseWPF>
@@ -19,20 +19,14 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Autofac"
-                          Version="6.0.0" />
-        <PackageReference Include="Microsoft.CSharp"
-                          Version="4.7.0" />
+                          Version="9.3.1" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf"
-                          Version="1.1.77" />
+                          Version="1.1.142" />
         <PackageReference Include="System.Data.DataSetExtensions"
                           Version="4.5.0" />
         <PackageReference Include="Microsoft.Bcl.AsyncInterfaces"
-                          Version="8.0.0" />
+                          Version="10.0.10" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"
-                          Version="8.0.0" />
-        <PackageReference Include="System.Diagnostics.DiagnosticSource"
-                          Version="8.0.0" />
-        <PackageReference Include="System.Runtime.CompilerServices.Unsafe"
-                          Version="6.0.0" />
+                          Version="10.0.10" />
     </ItemGroup>
 </Project>

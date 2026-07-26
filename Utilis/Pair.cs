@@ -16,13 +16,16 @@ namespace Utilis
 
 	public class Pair<T_1, T_2> : System.ComponentModel.INotifyPropertyChanged
 	{
+		private static readonly EqualityComparer<T_1> ms_comparerA = EqualityComparer<T_1>.Default;
+		private static readonly EqualityComparer<T_2> ms_comparerB = EqualityComparer<T_2>.Default;
+
 		private T_1 m_a;
 		public T_1 A
 		{
 			get { return m_a; }
 			set
 			{
-				if ( !Compare ( m_a, value ) )
+				if ( !ms_comparerA.Equals ( m_a, value ) )
 				{
 					m_a = value;
 					OnPropertyChanged ( "A" );
@@ -36,7 +39,7 @@ namespace Utilis
 			get { return m_b; }
 			set
 			{
-				if ( !Compare ( m_b, value ) )
+				if ( !ms_comparerB.Equals ( m_b, value ) )
 				{
 					m_b = value;
 					OnPropertyChanged ( "B" );
@@ -60,49 +63,12 @@ namespace Utilis
 			if ( oOtherPair == null )
 				return false;
 			else
-				return Compare<T_1> ( this.A, oOtherPair.A ) && Compare<T_2> ( this.B, oOtherPair.B );
+				return ms_comparerA.Equals ( this.A, oOtherPair.A ) && ms_comparerB.Equals ( this.B, oOtherPair.B );
 		}
 
 		public override int GetHashCode ( )
 		{
-			int nHashCode = 0;
-			if ( A != null )
-				nHashCode = A.GetHashCode ( );
-			try
-			{
-				if ( B != null )
-					nHashCode += B.GetHashCode ( );
-			}
-			catch ( OverflowException )
-			{
-				// this should work (i think).
-				nHashCode = int.MinValue + B.GetHashCode ( );
-			}
-			if ( nHashCode == 0 )
-				return base.GetHashCode ( );
-			else
-				return nHashCode;
-		}
-
-		private bool Compare<T> ( T o1, T o2 )
-		{
-			if ( o1 == null && o2 == null )
-				return true;
-			else if ( o1 == null || o2 == null )
-				return false;
-			else
-			{
-				IComparable ic_o1 = o1 as IComparable;
-				if ( ic_o1 != null )
-				{
-					IComparable ic_o2 = o2 as IComparable;
-					if ( ic_o2 != null )
-					{
-						return ic_o1.CompareTo ( ic_o2 ) == 0;
-					}
-				}
-				return o1.Equals ( o2 );
-			}
+			return HashCode.Combine ( A, B );
 		}
 
 		#region INotifyPropertyChanged Members
@@ -134,8 +100,8 @@ namespace Utilis
 				return true;
 			else if ( x == null || y == null )
 				return false;
-			else if ( Equals ( x.A, default ( T_2 ) ) )
-				return Equals ( y.A, default ( T_2 ) );
+			else if ( Equals ( x.A, default ( T_1 ) ) )
+				return Equals ( y.A, default ( T_1 ) );
 			else
 				return x.A.Equals ( y.A );
 		}
@@ -198,9 +164,9 @@ namespace Utilis
 				Parameter_T oParamX = m_oFnItemSelector ( x );
 				Parameter_T oParamY = m_oFnItemSelector ( y );
 
-				if ( Object.Equals ( oParamX, default ( Item_T ) ) && Object.Equals ( oParamY, default ( Item_T ) ) )
+				if ( Object.Equals ( oParamX, default ( Parameter_T ) ) && Object.Equals ( oParamY, default ( Parameter_T ) ) )
 					return true;
-				else if ( Object.Equals ( oParamX, default ( Item_T ) ) || Object.Equals ( oParamY, default ( Item_T ) ) )
+				else if ( Object.Equals ( oParamX, default ( Parameter_T ) ) || Object.Equals ( oParamY, default ( Parameter_T ) ) )
 					return false;
 				else
 					return oParamX.Equals ( oParamY );
