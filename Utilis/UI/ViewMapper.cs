@@ -60,7 +60,7 @@ namespace Utilis.UI
             if ( baseType != null && m_htTypes.TryGetValue ( baseType, out viewTypeInfo ) )
                 return viewTypeInfo;
 
-            return null!;
+            return null;
         }
     }
 }
