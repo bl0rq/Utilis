@@ -10,8 +10,8 @@ namespace Utilis.UI
 {
     public interface IViewMapper
     {
-        Type GetView<T> ( ) where T : ViewModel.Base;
-        Type GetView ( Type t );
+        Type? GetView<T> ( ) where T : ViewModel.Base;
+        Type? GetView ( Type t );
     }
 
     public class ViewMapper : IViewMapper
@@ -46,12 +46,12 @@ namespace Utilis.UI
             }
         }
 
-        public Type GetView<T> ( ) where T : ViewModel.Base
+        public Type? GetView<T> ( ) where T : ViewModel.Base
         {
             return GetView ( typeof ( T ) );
         }
 
-        public Type GetView ( Type viewModelType )
+        public Type? GetView ( Type viewModelType )
         {
             if ( m_htTypes.TryGetValue ( viewModelType, out var viewTypeInfo ) )
                 return viewTypeInfo;
