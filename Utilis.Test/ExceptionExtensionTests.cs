@@ -14,7 +14,7 @@ namespace Utilis.Test
         [Test]
         public void TestMagicNumberShowsUpInToFullString ( )
         {
-            Exception ex = new Exception ( "This is an exception." ).AddMagicNumber ( 123456789 );
+            Exception ex = new Exception ( "This is an exception." ).AddMagicNumber ( 123456789 )!;
             string exToFullString = ex.ToFullString ( );
             Assert.IsTrue ( exToFullString.Contains ( "123456789" ) );
         }

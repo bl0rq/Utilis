@@ -24,13 +24,13 @@ namespace Utilis.Messaging
             public Types Type { get; set; }
 
             [DataMember ( Order = 2 )]
-            public string Context { get; set; }
+            public string? Context { get; set; }
 
             [DataMember ( Order = 3 )]
-            public string Message { get; set; }
+            public string? Message { get; set; }
 
             [DataMember ( Order = 4 )]
-            public string TechnicalDetail { get; set; }
+            public string? TechnicalDetail { get; set; }
 
             [DataMember ( Order = 5 )]
             public DateTimeOffset Timestamp { get; set; }
@@ -45,7 +45,7 @@ namespace Utilis.Messaging
         {
         }
 
-        public StatusMessage ( Types type, string context, string message, string technicalDetail )
+        public StatusMessage ( Types type, string? context, string message, string? technicalDetail )
         {
             Data = new Status ( )
             {
@@ -65,7 +65,7 @@ namespace Utilis.Messaging
         public StatusMessage (
             Types type,
             string message,
-            string technicalDetail,
+            string? technicalDetail,
             [System.Runtime.CompilerServices.CallerMemberName] string method = "",
             [System.Runtime.CompilerServices.CallerFilePath] string file = "",
             [System.Runtime.CompilerServices.CallerLineNumber] int callingLineNumber = 0 )
@@ -86,7 +86,7 @@ namespace Utilis.Messaging
         }
 
         [System.Runtime.Serialization.DataMember ( Order = 1 )]
-        public StatusMessage.Status Data { get; set; }
+        public StatusMessage.Status Data { get; set; } = new Status();
 
         public bool IsAsync { get; } = true;
     }

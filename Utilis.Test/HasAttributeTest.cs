@@ -20,13 +20,13 @@ namespace Utilis.Test
         [Test]
         public void TestField ( )
         {
-            Assert.IsTrue ( typeof ( Foo ).GetField ( "Bar" ).HasAttribute<NonSerializedAttribute> ( ) );
+            Assert.IsTrue ( typeof ( Foo ).GetField ( "Bar" )!.HasAttribute<NonSerializedAttribute> ( ) );
         }
 
         [Test]
         public void TestProperty ( )
         {
-            Assert.IsTrue ( typeof ( Foo ).GetProperty ( "Blah" ).HasAttribute<System.Runtime.Serialization.DataMemberAttribute> ( ) );
+            Assert.IsTrue ( typeof ( Foo ).GetProperty ( "Blah" )!.HasAttribute<System.Runtime.Serialization.DataMemberAttribute> ( ) );
         }
     }
 
@@ -35,9 +35,9 @@ namespace Utilis.Test
     {
         [System.Runtime.Serialization.DataMember]
         [System.ComponentModel.DataAnnotations.MaxLength ( 200 )]
-        public int [] Blah { get; set; }
+        public int []? Blah { get; set; }
 
         [NonSerialized]
-        public string Bar;
+        public string? Bar;
     }
 }

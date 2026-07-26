@@ -27,7 +27,7 @@ namespace Utilis.Extensions
 
 		public static T FirstOrDefaultNullList<T> ( this IEnumerable<T> arr )
 		{
-			return arr == null ? default ( T ) : arr.FirstOrDefault ( );
+			return arr == null ? default! : arr.FirstOrDefault ( )!;
 		}
 
 		public static int IndexOf<T> ( this IList<T> arr, Func<T, bool> fnWhere )
@@ -119,7 +119,7 @@ namespace Utilis.Extensions
 
 		public static void AddRange<T> ( this ICollection<T> aTarget, IEnumerable<T> aSource )
 		{
-			List<T> asList = aTarget as List<T>;
+			List<T>? asList = aTarget as List<T>;
 			if ( asList != null )
 			{
 				asList.AddRange ( aSource );
@@ -162,7 +162,7 @@ namespace Utilis.Extensions
 		}
 
 #if !SILVERLIGHT
-		public static Dictionary<TKey, List<TValue>> ToListDictionary<TKey, TValue> ( this IEnumerable<TValue> aList, Func<TValue, TKey> fnKeySelector )
+		public static Dictionary<TKey, List<TValue>> ToListDictionary<TKey, TValue> ( this IEnumerable<TValue> aList, Func<TValue, TKey> fnKeySelector ) where TKey : notnull
 		{
 			Dictionary<TKey, List<TValue>> ht = new Dictionary<TKey, List<TValue>> ( );
 
@@ -177,7 +177,7 @@ namespace Utilis.Extensions
 		public static Dictionary<TKey, List<TValue>> ToListDictionary<TKey, TSource, TValue> (
 			this IEnumerable<TSource> aList,
 			Func<TSource, TKey> fnKeySelector,
-			Func<TSource, TValue> fnValueSelector )
+			Func<TSource, TValue> fnValueSelector ) where TKey : notnull
 		{
 			Dictionary<TKey, List<TValue>> ht = new Dictionary<TKey, List<TValue>> ( );
 
@@ -248,17 +248,17 @@ namespace Utilis.Extensions
 		public static TSource SecondToLast<TSource> ( this IEnumerable<TSource> source )
 		{
 			if ( source == null )
-				return default ( TSource );
+				return default!;
 
-			return source.Reverse ( ).Skip ( 1 ).FirstOrDefault ( );
+			return source.Reverse ( ).Skip ( 1 ).FirstOrDefault ( )!;
 		}
 
 		private static TSource ItemByNumber<TSource> ( this IEnumerable<TSource> source, uint n )
 		{
 			if ( source == null )
-				return default ( TSource );
+				return default!;
 
-			IList<TSource> list = source as IList<TSource>;
+			IList<TSource>? list = source as IList<TSource>;
 			if ( list != null )
 			{
 				if ( list.Count > n )

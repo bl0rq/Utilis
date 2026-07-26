@@ -13,12 +13,12 @@ namespace Utilis
             Messaging.Bus.Instance.Send ( new Messaging.StatusMessage ( type, null, message, null ) );
         }
 
-        public static void Log ( Messaging.StatusMessage.Types type, string message, string sDetail )
+        public static void Log ( Messaging.StatusMessage.Types type, string message, string? sDetail )
         {
             Messaging.Bus.Instance.Send ( new Messaging.StatusMessage ( type, null, message, sDetail ) );
         }
 
-        public static void Log ( Messaging.StatusMessage.Types type, string message, string sDetail, string context )
+        public static void Log ( Messaging.StatusMessage.Types type, string message, string? sDetail, string? context )
         {
             Messaging.Bus.Instance.Send ( new Messaging.StatusMessage ( type, context, message, sDetail ) );
         }
@@ -48,7 +48,7 @@ namespace Utilis
                     null ) );
         }
 
-        public static void Log ( TimeSpan ts, string actionName, string context, string sDetail )
+        public static void Log ( TimeSpan ts, string actionName, string context, string? sDetail )
         {
             Messaging.Bus.Instance.Send (
                 new Messaging.StatusMessage (

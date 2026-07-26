@@ -61,10 +61,10 @@ namespace Utilis
         {
             Ensure ( exp.NodeType == System.Linq.Expressions.ExpressionType.Lambda, "Expression must be a lamda" );
 
-            System.Linq.Expressions.MemberExpression memberExp = exp.Body as System.Linq.Expressions.MemberExpression;
+            System.Linq.Expressions.MemberExpression? memberExp = exp.Body as System.Linq.Expressions.MemberExpression;
             Ensure ( memberExp != null, "Body of lamba must be a property access." );
 
-            return memberExp.Member.Name;
+            return memberExp!.Member.Name;
         }
 
         public class ContractException : Exception
@@ -90,7 +90,7 @@ namespace Utilis
         public static T AssertIsType<T> ( System.Linq.Expressions.Expression<Func<object>> exp, object o )
         {
             if ( o == null )
-                return default ( T );
+                return default!;
             else if ( o is T )
             {
                 return (T)o;

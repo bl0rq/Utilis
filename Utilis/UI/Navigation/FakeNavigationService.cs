@@ -31,24 +31,26 @@ namespace Utilis.UI.Navigation
 
         }
 
-        public Task<bool> NavigateAsync<T_VM> ( T_VM parameter = default ( T_VM ) ) where T_VM : Utilis.UI.ViewModel.Base
+        public Task<bool> NavigateAsync<T_VM> ( T_VM? parameter = default ( T_VM ) ) where T_VM : Utilis.UI.ViewModel.Base
         {
             CurrentViewModel = parameter;
             return Task.FromResult ( true );
         }
 
-        public bool Navigate<T_VM> ( T_VM parameter = default ( T_VM ) ) where T_VM : Utilis.UI.ViewModel.Base
+        public bool Navigate<T_VM> ( T_VM? parameter = default ( T_VM ) ) where T_VM : Utilis.UI.ViewModel.Base
         {
             CurrentViewModel = parameter;
             return true;
         }
 
-        public bool NavigateAndRemoveCurrentFromBackStack<T_VM> ( T_VM parameter = default ( T_VM ) ) where T_VM : Utilis.UI.ViewModel.Base
+        public bool NavigateAndRemoveCurrentFromBackStack<T_VM> ( T_VM? parameter = default ( T_VM ) ) where T_VM : Utilis.UI.ViewModel.Base
         {
             return Navigate ( parameter );
         }
 
-        public Utilis.UI.ViewModel.Base CurrentViewModel { get; private set; }
-        public event Action Navigated;
+        public Utilis.UI.ViewModel.Base? CurrentViewModel { get; private set; }
+        #pragma warning disable CS0067
+        public event Action? Navigated;
+        #pragma warning restore CS0067
     }
 }

@@ -22,50 +22,50 @@ namespace Utilis.UI.Navigation
                 System.Diagnostics.Debug.WriteLine ( e );
             }
         }
-        public static System.Windows.Input.ICommand Back { get; }
+        public static System.Windows.Input.ICommand? Back { get; }
 
         internal static void Navigated ( )
         {
-            ( (IDelegateCommand)Back ).FireCanExecuteChanged ( );
+            ( Back as IDelegateCommand )?.FireCanExecuteChanged ( );
         }
     }
 
     public class NavigationCommand<T> : ICommand where T : ViewModel.Base
     {
-        private readonly Func<bool> m_canExecute;
+        private readonly Func<bool>? m_canExecute;
         private readonly Func<T> m_createViewModel;
-        private readonly IService m_service;
+        private readonly IService? m_service;
 
-        public NavigationCommand ( Func<T> createViewModel, Navigation.IService service = null )
+        public NavigationCommand ( Func<T> createViewModel, Navigation.IService? service = null )
         {
             Contract.AssertNotNull ( ( ) => createViewModel, createViewModel );
             m_createViewModel = createViewModel;
             m_service = service;
         }
 
-        public NavigationCommand ( Func<T> createViewModel, Func<bool> canExecute, Navigation.IService service = null )
+        public NavigationCommand ( Func<T> createViewModel, Func<bool>? canExecute, Navigation.IService? service = null )
             : this ( createViewModel, service )
         {
             m_canExecute = canExecute;
         }
 
-        public bool CanExecute ( object parameter )
+        public bool CanExecute ( object? parameter )
         {
             return m_canExecute == null || m_canExecute ( );
         }
 
-        public void Execute ( object parameter )
+        public void Execute ( object? parameter )
         {
             var vm = m_createViewModel ( );
             if ( vm != null )
-                ( m_service ?? ServiceLocator.Instance.GetInstance<Navigation.IService> ( ) ).Navigate ( vm );
+                ( m_service ?? ServiceLocator.Instance?.GetInstance<Navigation.IService> ( ) )?.Navigate ( vm );
         }
 
         public void FireCanExecuteChanged ( )
         {
             DoCanExecuteChanged ( );
         }
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
         private void DoCanExecuteChanged ( )
         {
@@ -102,7 +102,8 @@ namespace Utilis.UI.Navigation
 
         private static T ResolveInstance ( )
         {
-            T instance = ServiceLocator.Instance.GetInstance<T> ( );
+            var locator = ServiceLocator.Instance ?? throw new InvalidOperationException ( "ServiceLocator.Instance is null." );
+            T instance = locator.GetInstance<T> ( );
             if ( instance == null )
                 throw new InvalidOperationException ( "Unable to resolve type '" + typeof ( T ) + "'." );
             else

@@ -9,15 +9,15 @@ namespace Utilis
     public static class Runner
     {
         public static bool AsyncEnabled { get; set; }
-        public static IDispatcher Dispatcher { get; set; }
-        public static Action<Action, AsyncCallback> AsyncCall { get; set; }
+        public static IDispatcher? Dispatcher { get; set; }
+        public static Action<Action, AsyncCallback?> AsyncCall { get; set; }
 
-        public static event Action<Exception, string> Error;
+        public static event Action<Exception, string>? Error;
         private static bool DoError ( Exception ex, string sContextName )
         {
             Logger.Log ( ex, sContextName );
 
-            Action<Exception, string> handler = Error;
+            Action<Exception, string>? handler = Error;
             if ( handler != null )
             {
                 handler ( ex, sContextName );
@@ -34,7 +34,7 @@ namespace Utilis
             AsyncCall = ( act, callback ) => Task.Run(act).ContinueWith(t => callback?.Invoke(t));
         }
 
-        public static void RunAsync ( Action act, AsyncCallback callback = null )
+        public static void RunAsync ( Action act, AsyncCallback? callback = null )
         {
             RunAsync (
                 act,
@@ -42,12 +42,12 @@ namespace Utilis
                 ex => DoError ( ex, "Runner.RunAsync" ) );
         }
 
-        public static void RunAsync ( Action act, AsyncCallback callback, Action<Exception> fnErrorHandler )
+        public static void RunAsync ( Action act, AsyncCallback? callback, Action<Exception>? fnErrorHandler )
         {
-            RunAsync ( act, callback, fnErrorHandler == null ? (Func<Exception, bool>)null : ex => { fnErrorHandler ( ex ); return true; } );
+            RunAsync ( act, callback, fnErrorHandler == null ? null : ex => { fnErrorHandler ( ex ); return true; } );
         }
 
-        public static void RunAsync ( Action act, AsyncCallback callback, Func<Exception, bool> fnErrorHandler )
+        public static void RunAsync ( Action act, AsyncCallback? callback, Func<Exception, bool>? fnErrorHandler )
         {
             try
             {
@@ -57,13 +57,12 @@ namespace Utilis
                 else
                 {
                     wrapper ( );
-                    if ( callback != null )
-                        callback ( null );
+                    callback?.Invoke ( Task.CompletedTask );
                 }
             }
             catch ( Exception ex )
             {
-                if ( !fnErrorHandler ( ex ) )
+                if ( fnErrorHandler == null || !fnErrorHandler ( ex ) )
                     throw;
             }
         }
@@ -78,7 +77,7 @@ namespace Utilis
 #pragma warning restore 4014
         }
 
-        public static void RunOnDispatcherThreadBlocking ( Action act, Action taskCanced = null )
+        public static void RunOnDispatcherThreadBlocking ( Action act, Action? taskCanced = null )
         {
             if ( Dispatcher?.CheckAccess ( ) ?? true )
                 RunWrapped ( act );

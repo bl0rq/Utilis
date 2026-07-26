@@ -10,7 +10,7 @@ namespace Utilis.Messaging
     public abstract class BaseDataMessage<T> : IMessage
     {
         [System.Runtime.Serialization.DataMember ( Order = 1 )]
-        public T Data { get; set; }
+        public T Data { get; set; } = default!;
 
         protected BaseDataMessage ( )
         {

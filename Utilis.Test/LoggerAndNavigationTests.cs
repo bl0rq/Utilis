@@ -56,8 +56,8 @@ namespace Utilis.Test
             Assert.IsTrue(listener.Messages.Any(m =>
                 m.Data.Type == StatusMessage.Types.Error
                 && m.Data.Context == "RunContext"
-                && m.Data.Message.Contains("Error in RunContext")
-                && m.Data.TechnicalDetail.Contains("bad op")));
+                && ( m.Data.Message?.Contains("Error in RunContext") ?? false )
+                && ( m.Data.TechnicalDetail?.Contains("bad op") ?? false )));
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace Utilis.Test
             Assert.IsTrue(listener.Messages.Any(m =>
                 m.Data.Type == StatusMessage.Types.Debug
                 && m.Data.Context == "Ctx"
-                && m.Data.Message.Contains("Save took")));
+                && ( m.Data.Message?.Contains("Save took") ?? false )));
         }
 
         [Test]

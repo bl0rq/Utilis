@@ -29,8 +29,8 @@ namespace Utilis.ObjectModel
         {
         }
 
-        private event System.Collections.Specialized.NotifyCollectionChangedEventHandler CollectionChangedNormal;
-        private event System.Collections.Specialized.NotifyCollectionChangedEventHandler CollectionChangedDispatcher;
+        private event System.Collections.Specialized.NotifyCollectionChangedEventHandler? CollectionChangedNormal;
+        private event System.Collections.Specialized.NotifyCollectionChangedEventHandler? CollectionChangedDispatcher;
 
         bool m_isInAddRange = false;
         public void AddRange ( IList<T> items )
@@ -77,7 +77,7 @@ namespace Utilis.ObjectModel
             AddRange ( (IList<T>)items );
         }
 
-        public override event System.Collections.Specialized.NotifyCollectionChangedEventHandler CollectionChanged
+        public override event System.Collections.Specialized.NotifyCollectionChangedEventHandler? CollectionChanged
         {
             add
             {

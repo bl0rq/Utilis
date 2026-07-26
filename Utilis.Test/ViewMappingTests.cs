@@ -62,12 +62,12 @@ namespace Utilis.Test
 
         private class DashboardView : IView<DashboardViewModel>
         {
-            public DashboardViewModel ViewModel { get; set; }
+            public DashboardViewModel ViewModel { get; set; } = null!;
 
             public Utilis.UI.ViewModel.Base ViewModelObject
             {
                 get => ViewModel;
-                set => ViewModel = value as DashboardViewModel;
+                set => ViewModel = (DashboardViewModel)value;
             }
         }
     }

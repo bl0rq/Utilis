@@ -11,12 +11,12 @@ namespace Utilis.ObjectModel
     {
         private readonly object m_propertiesListSync = new object ( );
 
-        public event Action<BaseNotifyPropertyChanged, IEnumerable<Pair<string, TunneledPropertyChangedEventArgs>>> PropertiesChanged;
-        protected void DoPropertiesChanged ( BaseNotifyPropertyChanged sender, IEnumerable<Pair<string, TunneledPropertyChangedEventArgs>> e )
+        public event Action<BaseNotifyPropertyChanged, IEnumerable<Pair<string?, TunneledPropertyChangedEventArgs>>>? PropertiesChanged;
+        protected void DoPropertiesChanged ( BaseNotifyPropertyChanged sender, IEnumerable<Pair<string?, TunneledPropertyChangedEventArgs>> e )
         {
             if ( !m_isPropertiesChangedDisabled )
             {
-                Action<BaseNotifyPropertyChanged, IEnumerable<Pair<string, TunneledPropertyChangedEventArgs>>> act = PropertiesChanged;
+                Action<BaseNotifyPropertyChanged, IEnumerable<Pair<string?, TunneledPropertyChangedEventArgs>>>? act = PropertiesChanged;
                 if ( act != null )
                     act ( sender, e );
             }
@@ -36,10 +36,10 @@ namespace Utilis.ObjectModel
         }
 
         private bool m_isPropertiesChangedDisabled = false;
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
         protected virtual void DoPropertyChanged ( System.ComponentModel.PropertyChangedEventArgs e )
         {
-            System.ComponentModel.PropertyChangedEventHandler oHandler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler? oHandler = PropertyChanged;
             if ( oHandler != null )
                 oHandler ( this, e );
         }
@@ -65,19 +65,19 @@ namespace Utilis.ObjectModel
             {
                 DoPropertyChanged ( e );
 
-                DoPropertiesChanged ( this, new [] { new Pair<string, TunneledPropertyChangedEventArgs> ( e.PropertyName, e ) } );
+                DoPropertiesChanged ( this, new [] { new Pair<string?, TunneledPropertyChangedEventArgs> ( e.PropertyName, e ) } );
             }
             else if ( m_isTrackChanges )
             {
                 lock ( m_propertiesListSync )
                     if ( !m_propertiesChanged.Any ( item => item.A == name ) )
-                        m_propertiesChanged.Add ( new Pair<string, TunneledPropertyChangedEventArgs> ( name, e ) );
+                        m_propertiesChanged.Add ( new Pair<string?, TunneledPropertyChangedEventArgs> ( name, e ) );
 
                 m_needsChangeFired = true;
             }
         }
 
-        protected void OnPropertyChanged ( string name, System.ComponentModel.PropertyChangedEventArgs inner )
+        protected void OnPropertyChanged ( string name, System.ComponentModel.PropertyChangedEventArgs? inner )
         {
             TunneledPropertyChangedEventArgs e = new TunneledPropertyChangedEventArgs ( name, this, inner );
 
@@ -91,13 +91,13 @@ namespace Utilis.ObjectModel
             {
                 DoPropertyChanged ( e );
 
-                DoPropertiesChanged ( this, new [] { new Pair<string, TunneledPropertyChangedEventArgs> ( e.PropertyName, e ) } );
+                DoPropertiesChanged ( this, new [] { new Pair<string?, TunneledPropertyChangedEventArgs> ( e.PropertyName, e ) } );
             }
             else if ( m_isTrackChanges )
             {
                 lock ( m_propertiesListSync )
                     if ( !m_propertiesChanged.Any ( item => item.A == name && item.B == inner ) )
-                        m_propertiesChanged.Add ( new Pair<string, TunneledPropertyChangedEventArgs> ( name, e ) );
+                        m_propertiesChanged.Add ( new Pair<string?, TunneledPropertyChangedEventArgs> ( name, e ) );
 
                 m_needsChangeFired = true;
             }
@@ -107,7 +107,7 @@ namespace Utilis.ObjectModel
         protected bool m_isDisableOnChange = false;
         protected bool m_needsChangeFired = true;
         protected bool m_isTrackChanges = true;
-        protected List<Pair<string, TunneledPropertyChangedEventArgs>> m_propertiesChanged = new List<Pair<string, TunneledPropertyChangedEventArgs>> ( );
+        protected List<Pair<string?, TunneledPropertyChangedEventArgs>> m_propertiesChanged = new List<Pair<string?, TunneledPropertyChangedEventArgs>> ( );
 
         public void DisableOnChange ( )
         {
@@ -130,7 +130,7 @@ namespace Utilis.ObjectModel
                 m_isDisableOnChange = false;
                 if ( m_needsChangeFired )
                 {
-                    Pair<string, TunneledPropertyChangedEventArgs> [] propertiesChanged;
+                    Pair<string?, TunneledPropertyChangedEventArgs> [] propertiesChanged;
                     lock ( m_propertiesListSync )
                     {
                         propertiesChanged = m_propertiesChanged.ToArray ( );
@@ -138,9 +138,9 @@ namespace Utilis.ObjectModel
                     }
 
                     m_isPropertiesChangedDisabled = true;
-                    foreach ( Pair<string, TunneledPropertyChangedEventArgs> oProperty in propertiesChanged )
+                    foreach ( Pair<string?, TunneledPropertyChangedEventArgs> oProperty in propertiesChanged )
                     {
-                        OnPropertyChanged ( oProperty.A, oProperty.B );
+                        OnPropertyChanged ( oProperty.A!, oProperty.B );
                     }
                     m_isPropertiesChangedDisabled = false;
 
@@ -153,19 +153,19 @@ namespace Utilis.ObjectModel
 
     public class TunneledPropertyChangedEventArgs : System.ComponentModel.PropertyChangedEventArgs
     {
-        private static Pair<object, string> [] EmptyList = new Pair<object, string> [] { };
+        private static Pair<object?, string?> [] EmptyList = new Pair<object?, string?> [] { };
 
-        public System.ComponentModel.PropertyChangedEventArgs Inner { get; set; }
+        public System.ComponentModel.PropertyChangedEventArgs? Inner { get; set; }
 
         public Type CurrentType { get; set; }
 
-        public object Sender { get; set; }
+        public object? Sender { get; set; }
 
-        public TunneledPropertyChangedEventArgs ( string sPropertyName, object oSender, System.ComponentModel.PropertyChangedEventArgs oInner )
+        public TunneledPropertyChangedEventArgs ( string sPropertyName, object? oSender, System.ComponentModel.PropertyChangedEventArgs? oInner )
             : base ( sPropertyName )
         {
             Sender = oSender;
-            CurrentType = oSender.GetType ( );
+            CurrentType = oSender?.GetType ( ) ?? typeof ( object );
             Inner = oInner;
         }
 
@@ -177,20 +177,20 @@ namespace Utilis.ObjectModel
             return GetAllPropertiesChanged ( ).Any ( item => item.B == sProperty );
         }
 
-        public virtual IEnumerable<Pair<object, string>> GetAllPropertiesChanged ( )
+        public virtual IEnumerable<Pair<object?, string?>> GetAllPropertiesChanged ( )
         {
-            return new Pair<object, string> [] { new Pair<object, string> ( Sender, PropertyName ) }.Concat ( GetAllInnerPropertiesChanged ( ) );
+            return new Pair<object?, string?> [] { new Pair<object?, string?> ( Sender, PropertyName ) }.Concat ( GetAllInnerPropertiesChanged ( ) );
         }
 
-        protected IEnumerable<Pair<object, string>> GetAllInnerPropertiesChanged ( )
+        protected IEnumerable<Pair<object?, string?>> GetAllInnerPropertiesChanged ( )
         {
             if ( Inner != null )
             {
-                TunneledPropertyChangedEventArgs oInner = Inner as TunneledPropertyChangedEventArgs;
+                TunneledPropertyChangedEventArgs? oInner = Inner as TunneledPropertyChangedEventArgs;
                 if ( oInner != null )
                     return oInner.GetAllPropertiesChanged ( );
                 else
-                    return new Pair<object, string> [] { new Pair<object, string> ( null, Inner.PropertyName ) };
+                    return new Pair<object?, string?> [] { new Pair<object?, string?> ( null, Inner.PropertyName ) };
             }
             return EmptyList;
         }
@@ -200,16 +200,16 @@ namespace Utilis.ObjectModel
     {
         public IEnumerable<string> PropertyNames { get; set; }
 
-        public TunneledMultiPropertyChangedEventArgs ( IEnumerable<string> aPropertyNames, object oSender, System.ComponentModel.PropertyChangedEventArgs oInner )
+        public TunneledMultiPropertyChangedEventArgs ( IEnumerable<string> aPropertyNames, object? oSender, System.ComponentModel.PropertyChangedEventArgs? oInner )
             : base ( aPropertyNames.First ( ), oSender, oInner )
         {
             PropertyNames = aPropertyNames;
         }
 
-        public override IEnumerable<Pair<object, string>> GetAllPropertiesChanged ( )
+        public override IEnumerable<Pair<object?, string?>> GetAllPropertiesChanged ( )
         {
             return PropertyNames
-                .Select ( sPropertyName => new Pair<object, string> ( Sender, sPropertyName ) )
+                .Select ( sPropertyName => new Pair<object?, string?> ( Sender, sPropertyName ) )
                 .Concat ( GetAllInnerPropertiesChanged ( ) );
         }
     }

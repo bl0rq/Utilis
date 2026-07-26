@@ -17,7 +17,7 @@ namespace Utilis.Test
         [Test]
         public void AssertNotNull_Throws_WhenNull()
         {
-            string value = null;
+            string? value = null;
             var ex = Assert.Throws<Contract.AssertionException>(() => Contract.AssertNotNull(() => value, value));
             Assert.IsTrue(ex.Message.Contains("value must not be null."));
         }
@@ -41,10 +41,10 @@ namespace Utilis.Test
         [Test]
         public void AssertNotEmptyArray_Throws_WhenNullOrEmpty()
         {
-            int[] nullItems = null;
+            int[]? nullItems = null;
             int[] emptyItems = Array.Empty<int>();
 
-            var exNull = Assert.Throws<Contract.AssertionException>(() => Contract.AssertNotEmpty(() => nullItems, nullItems));
+            var exNull = Assert.Throws<Contract.AssertionException>(() => Contract.AssertNotEmpty(() => nullItems!, nullItems!));
             var exEmpty = Assert.Throws<Contract.AssertionException>(() => Contract.AssertNotEmpty(() => emptyItems, emptyItems));
 
             Assert.IsTrue(exNull.Message.Contains("nullItems must not be empty."));
@@ -69,16 +69,18 @@ namespace Utilis.Test
         public void AssertIsType_ReturnsTypedValue_WhenTypeMatches()
         {
             object obj = "abc";
-            var result = Contract.AssertIsType<string>(() => obj, obj);
+            var result = Contract.AssertIsType<string>(() => obj!, obj!);
             Assert.AreEqual("abc", result);
         }
 
         [Test]
         public void AssertIsType_ReturnsDefault_WhenNull()
         {
-            object obj = null;
+#pragma warning disable CS8603, CS8604
+            object? obj = null;
             var result = Contract.AssertIsType<string>(() => obj, obj);
             Assert.IsNull(result);
+#pragma warning restore CS8603, CS8604
         }
 
         [Test]

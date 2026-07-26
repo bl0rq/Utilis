@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Utilis.ObjectModel
 {
-    public class ConcurrentCache<TKey, TValue>
+    public class ConcurrentCache<TKey, TValue> where TKey : notnull
     {
         private IImmutableDictionary<TKey, TValue> m_cache = ImmutableDictionary.Create<TKey, TValue> ( );
 
@@ -16,7 +16,7 @@ namespace Utilis.ObjectModel
             Contract.AssertNotNull ( ( ) => key, key );
             Contract.AssertNotNull ( ( ) => valueFactory, valueFactory );
 
-            TValue newValue = default ( TValue );
+            TValue newValue = default!;
 
             bool newValueCreated = false;
 
@@ -24,10 +24,10 @@ namespace Utilis.ObjectModel
             {
                 var oldCache = m_cache;
 
-                TValue value;
+                TValue? value = default;
 
                 if ( oldCache.TryGetValue ( key, out value ) )
-                    return value;
+                    return value!;
 
                 if ( !newValueCreated )
                 {

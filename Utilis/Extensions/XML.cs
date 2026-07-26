@@ -7,9 +7,9 @@ namespace Utilis.Extensions
 {
 	public static class XmlExtensions
 	{
-		public static System.Xml.Linq.XElement ElementRequired ( this System.Xml.Linq.XElement xParent, System.Xml.Linq.XName xName, Action<string> actNotFound )
+		public static System.Xml.Linq.XElement? ElementRequired ( this System.Xml.Linq.XElement xParent, System.Xml.Linq.XName xName, Action<string> actNotFound )
 		{
-			System.Xml.Linq.XElement xChild = xParent.Element ( xName );
+			System.Xml.Linq.XElement? xChild = xParent.Element ( xName );
 
 			if ( xChild == null )
 				actNotFound ( xName.ToString ( ) );
@@ -39,7 +39,7 @@ namespace Utilis.Extensions
 				if ( xElement == null )
 					return Default;
 				else
-					return (T)Enum.Parse ( typeof ( T ), xElement.GetValue ( ) );
+					return (T)Enum.Parse ( typeof ( T ), xElement.GetValue ( )! );
 			}
 			catch ( FormatException )
 			{
@@ -92,7 +92,7 @@ namespace Utilis.Extensions
 			}
 		}
 
-		public static string GetValue ( this System.Xml.Linq.XElement xElement )
+		public static string? GetValue ( this System.Xml.Linq.XElement xElement )
 		{
 			if ( xElement == null )
 				return null;

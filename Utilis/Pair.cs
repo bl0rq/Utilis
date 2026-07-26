@@ -19,8 +19,8 @@ namespace Utilis
 		private static readonly EqualityComparer<T_1> ms_comparerA = EqualityComparer<T_1>.Default;
 		private static readonly EqualityComparer<T_2> ms_comparerB = EqualityComparer<T_2>.Default;
 
-		private T_1 m_a;
-		public T_1 A
+		private T_1? m_a;
+		public T_1? A
 		{
 			get { return m_a; }
 			set
@@ -33,8 +33,8 @@ namespace Utilis
 			}
 		}
 
-		private T_2 m_b;
-		public T_2 B
+		private T_2? m_b;
+		public T_2? B
 		{
 			get { return m_b; }
 			set
@@ -51,15 +51,15 @@ namespace Utilis
 		{
 		}
 
-		public Pair ( T_1 objA, T_2 objB )
+		public Pair ( T_1? objA, T_2? objB )
 		{
 			m_a = objA;
 			m_b = objB;
 		}
 
-		public override bool Equals ( object obj )
+		public override bool Equals ( object? obj )
 		{
-			Pair<T_1, T_2> oOtherPair = obj as Pair<T_1, T_2>;
+			Pair<T_1, T_2>? oOtherPair = obj as Pair<T_1, T_2>;
 			if ( oOtherPair == null )
 				return false;
 			else
@@ -73,11 +73,11 @@ namespace Utilis
 
 		#region INotifyPropertyChanged Members
 
-		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+		public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
 
 		protected void OnPropertyChanged ( string sName )
 		{
-			System.ComponentModel.PropertyChangedEventHandler oHandler = PropertyChanged;
+			System.ComponentModel.PropertyChangedEventHandler? oHandler = PropertyChanged;
 			if ( oHandler != null )
 				oHandler ( this, new System.ComponentModel.PropertyChangedEventArgs ( sName ) );
 		}
@@ -94,7 +94,7 @@ namespace Utilis
 	{
 		#region IEqualityComparer<Pair<T_1,T_2>> Members
 
-		public bool Equals ( Pair<T_1, T_2> x, Pair<T_1, T_2> y )
+		public bool Equals ( Pair<T_1, T_2>? x, Pair<T_1, T_2>? y )
 		{
 			if ( x == null && y == null )
 				return true;
@@ -103,15 +103,14 @@ namespace Utilis
 			else if ( Equals ( x.A, default ( T_1 ) ) )
 				return Equals ( y.A, default ( T_1 ) );
 			else
-				return x.A.Equals ( y.A );
+				return EqualityComparer<T_1?>.Default.Equals ( x.A, y.A );
 		}
 
 		public int GetHashCode ( Pair<T_1, T_2> obj )
 		{
 			if ( obj == null )
 				return 0;
-			else
-				return obj.A.GetHashCode ( );
+			return obj.A?.GetHashCode ( ) ?? 0;
 		}
 
 		#endregion
@@ -121,7 +120,7 @@ namespace Utilis
 	{
 		#region IEqualityComparer<Pair<T_1,T_2>> Members
 
-		public bool Equals ( Pair<T_1, T_2> x, Pair<T_1, T_2> y )
+		public bool Equals ( Pair<T_1, T_2>? x, Pair<T_1, T_2>? y )
 		{
 			if ( x == null && y == null )
 				return true;
@@ -130,30 +129,30 @@ namespace Utilis
 			else if ( Equals ( x.B, default ( T_2 ) ) )
 				return Equals ( y.B, default ( T_2 ) );
 			else
-				return x.B.Equals ( y.B );
+				return EqualityComparer<T_2?>.Default.Equals ( x.B, y.B );
 		}
 
 		public int GetHashCode ( Pair<T_1, T_2> obj )
 		{
 			if ( obj == null )
 				return 0;
-			else
-				return obj.B.GetHashCode ( );
+			return obj.B?.GetHashCode ( ) ?? 0;
 		}
 
 		#endregion
 	}
 
-	public class ItemBySelectorComparer<Item_T, Parameter_T> : IEqualityComparer<Item_T>
+	public class ItemBySelectorComparer<Item_T, Parameter_T> : IEqualityComparer<Item_T> where Item_T : notnull
 	{
 		private readonly Func<Item_T, Parameter_T> m_oFnItemSelector;
 
 		public ItemBySelectorComparer ( Func<Item_T, Parameter_T> fnItemSelector )
 		{
+			if ( fnItemSelector == null ) throw new ArgumentNullException ( nameof ( fnItemSelector ) );
 			m_oFnItemSelector = fnItemSelector;
 		}
 
-		public bool Equals ( Item_T x, Item_T y )
+		public bool Equals ( Item_T? x, Item_T? y )
 		{
 			if ( Object.Equals ( x, default ( Item_T ) ) && Object.Equals ( y, default ( Item_T ) ) )
 				return true;
@@ -161,15 +160,15 @@ namespace Utilis
 				return false;
 			else
 			{
-				Parameter_T oParamX = m_oFnItemSelector ( x );
-				Parameter_T oParamY = m_oFnItemSelector ( y );
+				Parameter_T oParamX = m_oFnItemSelector ( x! );
+				Parameter_T oParamY = m_oFnItemSelector ( y! );
 
 				if ( Object.Equals ( oParamX, default ( Parameter_T ) ) && Object.Equals ( oParamY, default ( Parameter_T ) ) )
 					return true;
 				else if ( Object.Equals ( oParamX, default ( Parameter_T ) ) || Object.Equals ( oParamY, default ( Parameter_T ) ) )
 					return false;
 				else
-					return oParamX.Equals ( oParamY );
+					return EqualityComparer<Parameter_T>.Default.Equals ( oParamX, oParamY );
 			}
 		}
 
@@ -183,7 +182,7 @@ namespace Utilis
 				if ( Equals ( oParam, default ( Parameter_T ) ) )
 					return 0;
 				else
-					return oParam.GetHashCode ( );
+					return oParam?.GetHashCode ( ) ?? 0;
 			}
 		}
 	}

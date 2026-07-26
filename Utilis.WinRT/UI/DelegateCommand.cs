@@ -17,7 +17,7 @@ namespace Utilis.UI
     public class DelegateCommand : IDelegateCommand
     {
         public bool Async { get; set; }
-        public IDispatcher Dispatcher { get; set; }
+        public IDispatcher? Dispatcher { get; set; }
 
         private bool m_bIsExecuting = false;
         private bool IsExecuting
@@ -41,7 +41,7 @@ namespace Utilis.UI
         {
         }
 
-        public DelegateCommand ( Action executeMethod, Func<bool> canExecuteMethod )
+        public DelegateCommand ( Action executeMethod, Func<bool>? canExecuteMethod )
         {
             Async = false;
 
@@ -54,7 +54,7 @@ namespace Utilis.UI
             m_actCanExecuteMethod = canExecuteMethod;
         }
 
-        public bool CanExecute ( object parameter )
+        public bool CanExecute ( object? parameter )
         {
             return !IsExecuting && CanExecute ( );
         }
@@ -69,7 +69,7 @@ namespace Utilis.UI
             return true;
         }
 
-        public void Execute ( object parameter )
+        public void Execute ( object? parameter )
         {
             Execute ( );
         }
@@ -98,13 +98,13 @@ namespace Utilis.UI
             }
         }
 
-        private readonly Action m_actExecuteMethod = null;
-        private readonly Func<bool> m_actCanExecuteMethod = null;
+        private readonly Action m_actExecuteMethod;
+        private readonly Func<bool>? m_actCanExecuteMethod;
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
         public void FireCanExecuteChanged ( )
         {
-            EventHandler action = CanExecuteChanged;
+            EventHandler? action = CanExecuteChanged;
             if ( action != null )
                 //action ( this, EventArgs.Empty );
                 Runner.RunOnDispatcherThread ( ( ) => action ( this, EventArgs.Empty ) );
@@ -127,7 +127,7 @@ namespace Utilis.UI
     public class ArgumentDelegateCommand<T> : IDelegateCommand
     {
         public bool Async { get; set; }
-        public IDispatcher Dispatcher { get; set; }
+        public IDispatcher? Dispatcher { get; set; }
 
         private bool m_bIsExecuting = false;
         private bool IsExecuting
@@ -152,7 +152,7 @@ namespace Utilis.UI
             Async = true;
         }
 
-        public ArgumentDelegateCommand ( Action<T> executeMethod, Func<T, bool> canExecuteMethod )
+        public ArgumentDelegateCommand ( Action<T> executeMethod, Func<T, bool>? canExecuteMethod )
         {
             if ( executeMethod == null )
                 throw new ArgumentNullException ( nameof ( executeMethod ) );
@@ -161,18 +161,18 @@ namespace Utilis.UI
             m_actCanExecuteMethod = canExecuteMethod;
         }
 
-        public bool CanExecute ( object parameter )
+        public bool CanExecute ( object? parameter )
         {
             if ( IsExecuting )
                 return false;
 
             if ( m_actCanExecuteMethod != null )
-                return m_actCanExecuteMethod ( (T)parameter );
+                return parameter is T cast && m_actCanExecuteMethod ( cast );
 
             return true;
         }
 
-        public void Execute ( object parameter )
+        public void Execute ( object? parameter )
         {
             //T o = Contract.AssertIsType<T> ( ( ) => parameter, parameter );
 
@@ -182,26 +182,32 @@ namespace Utilis.UI
 
                 if ( Dispatcher != null )
                 {
-                    Dispatcher.RunAsync ( ( ) => m_actExecuteMethod ( (T)parameter ) ).Wait ( );
+                    if ( parameter is T castForDispatch )
+                        Dispatcher.RunAsync ( ( ) => m_actExecuteMethod ( castForDispatch ) ).Wait ( );
                     IsExecuting = false;
                 }
                 else if ( Async )
-                    Runner.RunAsync ( ( ) => m_actExecuteMethod ( (T)parameter ), B => IsExecuting = false );
+                    Runner.RunAsync ( ( ) =>
+                    {
+                        if ( parameter is T castForAsync )
+                            m_actExecuteMethod ( castForAsync );
+                    }, B => IsExecuting = false );
                 else
                 {
-                    m_actExecuteMethod ( (T)parameter );
+                    if ( parameter is T castForSync )
+                        m_actExecuteMethod ( castForSync );
                     IsExecuting = false;
                 }
             }
         }
 
-        private readonly Action<T> m_actExecuteMethod = null;
-        private readonly Func<T, bool> m_actCanExecuteMethod = null;
+        private readonly Action<T> m_actExecuteMethod;
+        private readonly Func<T, bool>? m_actCanExecuteMethod;
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
         public void FireCanExecuteChanged ( )
         {
-            EventHandler action = CanExecuteChanged;
+            EventHandler? action = CanExecuteChanged;
             if ( action != null )
                 Runner.RunOnDispatcherThread ( ( ) => action ( this, EventArgs.Empty ) );
             //Runner.RunOnDispatcherThread ( ( ) => action ( this, EventArgs.Empty ), System.Windows.Application.Current.Dispatcher );

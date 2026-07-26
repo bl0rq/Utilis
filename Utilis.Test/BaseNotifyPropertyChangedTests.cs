@@ -14,7 +14,7 @@ namespace Utilis.Test
         public void SetProperty_FiresPropertyChanged_WhenValueChanges()
         {
             var vm = new TestNotifyObject();
-            var changed = new List<string>();
+            var changed = new List<string?>();
             vm.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
 
             vm.Name = "first";
@@ -41,7 +41,7 @@ namespace Utilis.Test
         {
             var vm = new TestNotifyObject();
             var propertyChangedCount = 0;
-            var propertiesChangedPayload = new List<IEnumerable<Pair<string, TunneledPropertyChangedEventArgs>>>();
+            var propertiesChangedPayload = new List<IEnumerable<Pair<string?, TunneledPropertyChangedEventArgs>>>();
 
             vm.PropertyChanged += (_, _) => propertyChangedCount++;
             vm.PropertiesChanged += (_, items) => propertiesChangedPayload.Add(items.ToArray());
@@ -63,12 +63,13 @@ namespace Utilis.Test
         public void OnPropertyChanged_WithInner_ProvidesTunneledInfo()
         {
             var vm = new TestNotifyObject();
-            TunneledPropertyChangedEventArgs tunneled = null;
+            TunneledPropertyChangedEventArgs? tunneled = null;
             vm.PropertyChanged += (_, e) => tunneled = e as TunneledPropertyChangedEventArgs;
 
             vm.RaiseWrapped(nameof(TestNotifyObject.Name), new PropertyChangedEventArgs("InnerProp"));
 
             Assert.IsNotNull(tunneled);
+            Assert.That(tunneled, Is.Not.Null);
             Assert.AreEqual(nameof(TestNotifyObject.Name), tunneled.PropertyName);
             Assert.IsTrue(tunneled.ContainsProperty(nameof(TestNotifyObject.Name)));
             Assert.IsTrue(tunneled.ContainsProperty("InnerProp"));
@@ -76,10 +77,10 @@ namespace Utilis.Test
 
         private sealed class TestNotifyObject : BaseNotifyPropertyChanged
         {
-            private string _name;
+            private string? _name;
             private int _age;
 
-            public string Name
+            public string? Name
             {
                 get => _name;
                 set => SetProperty(ref _name, value);
