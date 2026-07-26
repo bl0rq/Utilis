@@ -35,20 +35,20 @@ namespace Utilis.UI
                         } )
                 .Where ( p => p.interfaceTypePair != null )
                 .Select (
-                    p => new Pair ( p.type, p.interfaceTypePair.interfaceTypeInfo.GenericTypeArguments.First ( ).GetTypeInfo ( ) ) );
+                    p => new Pair ( p.type, p.interfaceTypePair!.interfaceTypeInfo.GenericTypeArguments.First ( ).GetTypeInfo ( ) ) );
         }
 
         public class Pair : Pair<TypeInfo, TypeInfo>
         {
             public TypeInfo ViewType
             {
-                get { return A; }
+                get { return A!; }
                 set { A = value; }
             }
 
             public TypeInfo ViewModelType
             {
-                get { return B; }
+                get { return B!; }
                 private set { B = value; }
             }
 

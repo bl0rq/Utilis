@@ -10,13 +10,13 @@ namespace Utilis.UI
 {
     public interface IViewMapper
     {
-        Type GetView<T> ( ) where T : ViewModel.Base;
-        Type GetView ( Type t );
+        Type? GetView<T> ( ) where T : ViewModel.Base;
+        Type? GetView ( Type t );
     }
 
     public class ViewMapper : IViewMapper
     {
-        private Dictionary<Type, Type> m_htTypes;
+        private Dictionary<Type, Type> m_htTypes = new Dictionary<Type, Type> ( );
         private readonly ViewFinder m_viewFinder;
 
         public ViewMapper ( ViewFinder viewFinder, params Assembly [] assemblies )
@@ -38,30 +38,29 @@ namespace Utilis.UI
                 var foundTypes = m_viewFinder.Find ( ass );
                 foreach ( var foundType in foundTypes )
                 {
-                    var type = foundType.B.AsType ( );
+                    var type = foundType.B!.AsType ( );
                     if ( m_htTypes.ContainsKey ( type ) )
-                        Logger.Log ( Messaging.StatusMessage.Types.Debug, "Overwrite view mapping for type: " + type + " from " + m_htTypes [ type ] + " to " + foundType.A.AsType ( ) );
-                    m_htTypes [ type ] = foundType.A.AsType ( );
+                        Logger.Log ( Messaging.StatusMessage.Types.Debug, "Overwrite view mapping for type: " + type + " from " + m_htTypes [ type ] + " to " + foundType.A!.AsType ( ) );
+                    m_htTypes [ type ] = foundType.A!.AsType ( );
                 }
             }
         }
 
-        public Type GetView<T> ( ) where T : ViewModel.Base
+        public Type? GetView<T> ( ) where T : ViewModel.Base
         {
             return GetView ( typeof ( T ) );
         }
 
-        public Type GetView ( Type viewModelType )
+        public Type? GetView ( Type viewModelType )
         {
-            var viewTypeInfo = m_htTypes.SafeGet ( viewModelType );
-            if ( viewTypeInfo == null )
-            {
-                var baseType = viewModelType.GetTypeInfo ( ).BaseType;
-                viewTypeInfo = m_htTypes.SafeGet ( baseType );
+            if ( m_htTypes.TryGetValue ( viewModelType, out var viewTypeInfo ) )
                 return viewTypeInfo;
-            }
-            else
+
+            var baseType = viewModelType.GetTypeInfo ( ).BaseType;
+            if ( baseType != null && m_htTypes.TryGetValue ( baseType, out viewTypeInfo ) )
                 return viewTypeInfo;
+
+            return null;
         }
     }
 }

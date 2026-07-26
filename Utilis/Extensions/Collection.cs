@@ -7,61 +7,27 @@ namespace Utilis.Extensions
 {
 	public static class CollectionExtensions
 	{
+		[Obsolete ( "Prefer string.Join(delimiter, source.Select(selector)) or string.Join(delimiter, source)." )]
 		public static string Join<T> ( this IEnumerable<T> Collection, char sDelimiter, Func<T, string> JoinFunction )
 		{
-			StringBuilder sbStringReturnValue = new StringBuilder ( );
-
 			if ( JoinFunction != null )
-			{
-				foreach ( T value in Collection )
-				{
-					string sResult = JoinFunction ( value );
-					sbStringReturnValue.AppendFormat ( "{0}{1}", sResult, sDelimiter );
-				}
-			}
-			else
-			{
-				foreach ( T value in Collection )
-				{
-					sbStringReturnValue.AppendFormat ( "{0}{1}", value, sDelimiter );
-				}
-			}
+				return string.Join ( sDelimiter, Collection.Select ( JoinFunction ) );
 
-			return sbStringReturnValue.ToString ( ).TrimEnd ( sDelimiter );
+			return string.Join ( sDelimiter, Collection );
 		}
 
+		[Obsolete ( "Prefer string.Join(delimiter, source.Select(selector)) or string.Join(delimiter, source)." )]
 		public static string Join<T> ( this IEnumerable<T> Collection, string sDelimiter, Func<T, string> JoinFunction )
 		{
-			StringBuilder sbStringReturnValue = new StringBuilder ( );
-
 			if ( JoinFunction != null )
-			{
-				foreach ( T value in Collection )
-				{
-					string sResult = JoinFunction ( value );
-					sbStringReturnValue.AppendFormat ( "{0}{1}", sResult, sDelimiter );
-				}
-			}
-			else
-			{
-				foreach ( T value in Collection )
-				{
-					sbStringReturnValue.AppendFormat ( "{0}{1}", value, sDelimiter );
-				}
-			}
+				return string.Join ( sDelimiter, Collection.Select ( JoinFunction ) );
 
-			if ( sbStringReturnValue.Length == 0 )
-				return "";
-			else
-				return sbStringReturnValue.Remove ( sbStringReturnValue.Length - sDelimiter.Length, sDelimiter.Length ).ToString ( );
+			return string.Join ( sDelimiter, Collection );
 		}
 
 		public static T FirstOrDefaultNullList<T> ( this IEnumerable<T> arr )
 		{
-			if ( arr == null )
-				return default ( T );
-			else
-				return arr.FirstOrDefault ( );
+			return arr == null ? default! : arr.FirstOrDefault ( )!;
 		}
 
 		public static int IndexOf<T> ( this IList<T> arr, Func<T, bool> fnWhere )
@@ -99,7 +65,7 @@ namespace Utilis.Extensions
 			{
                 if ( arr [ i ] == item )
 				{
-					foundAt = 0; 
+					foundAt = i;
 					break;
 				}
 			}
@@ -114,7 +80,7 @@ namespace Utilis.Extensions
 					newArr [ i ] = arr [ i ];
 				}
 
-                for ( int i = foundAt + 1 ; i < newArr.Length ; i++ )
+				for ( int i = foundAt + 1 ; i < arr.Length ; i++ )
                 {
                     newArr [ i - 1 ] = arr [ i ];
                 }
@@ -148,16 +114,18 @@ namespace Utilis.Extensions
 		/// <returns></returns>
 		public static List<T> ToList<T, TEntry> ( this IEnumerable<TEntry> aList, Func<TEntry, T> fnItemSelector )
 		{
-			List<T> result = new List<T> ( );
-
-			foreach ( TEntry item in aList )
-				result.Add ( fnItemSelector ( item ) );
-
-			return result;
+			return aList.Select ( fnItemSelector ).ToList ( );
 		}
 
 		public static void AddRange<T> ( this ICollection<T> aTarget, IEnumerable<T> aSource )
 		{
+			List<T>? asList = aTarget as List<T>;
+			if ( asList != null )
+			{
+				asList.AddRange ( aSource );
+				return;
+			}
+
 			foreach ( T o in aSource )
 			{
 				aTarget.Add ( o );
@@ -174,13 +142,7 @@ namespace Utilis.Extensions
 
 		public static IEnumerable<T> Repeat<T> ( this IEnumerable<T> a, int nTimes )
 		{
-			for ( int i = 0 ; i < nTimes ; i++ )
-			{
-				foreach ( T t in a )
-				{
-					yield return t;
-				}
-			}
+			return Enumerable.Range ( 0, nTimes ).SelectMany ( _ => a );
 		}
 
 		public static void Push<T> ( this Stack<T> st, IEnumerable<T> arr )
@@ -200,7 +162,7 @@ namespace Utilis.Extensions
 		}
 
 #if !SILVERLIGHT
-		public static Dictionary<TKey, List<TValue>> ToListDictionary<TKey, TValue> ( this IEnumerable<TValue> aList, Func<TValue, TKey> fnKeySelector )
+		public static Dictionary<TKey, List<TValue>> ToListDictionary<TKey, TValue> ( this IEnumerable<TValue> aList, Func<TValue, TKey> fnKeySelector ) where TKey : notnull
 		{
 			Dictionary<TKey, List<TValue>> ht = new Dictionary<TKey, List<TValue>> ( );
 
@@ -215,7 +177,7 @@ namespace Utilis.Extensions
 		public static Dictionary<TKey, List<TValue>> ToListDictionary<TKey, TSource, TValue> (
 			this IEnumerable<TSource> aList,
 			Func<TSource, TKey> fnKeySelector,
-			Func<TSource, TValue> fnValueSelector )
+			Func<TSource, TValue> fnValueSelector ) where TKey : notnull
 		{
 			Dictionary<TKey, List<TValue>> ht = new Dictionary<TKey, List<TValue>> ( );
 
@@ -254,10 +216,8 @@ namespace Utilis.Extensions
 				return b == null;
 			else if ( b == null )
 				return false;
-			else if ( a.Length != b.Length )
-				return false;
 			else
-				return !( a.Where ( ( t, i ) => !Equals ( t, b[ i ] ) ).Any ( ) );
+				return a.SequenceEqual ( b );
 		}
 
 		public static IEnumerable<T> Concat<T> ( this IEnumerable<T> a, T item )
@@ -288,17 +248,17 @@ namespace Utilis.Extensions
 		public static TSource SecondToLast<TSource> ( this IEnumerable<TSource> source )
 		{
 			if ( source == null )
-				return default ( TSource );
+				return default!;
 
-			return source.Reverse ( ).Skip ( 1 ).FirstOrDefault ( );
+			return source.Reverse ( ).Skip ( 1 ).FirstOrDefault ( )!;
 		}
 
 		private static TSource ItemByNumber<TSource> ( this IEnumerable<TSource> source, uint n )
 		{
 			if ( source == null )
-				return default ( TSource );
+				return default!;
 
-			IList<TSource> list = source as IList<TSource>;
+			IList<TSource>? list = source as IList<TSource>;
 			if ( list != null )
 			{
 				if ( list.Count > n )

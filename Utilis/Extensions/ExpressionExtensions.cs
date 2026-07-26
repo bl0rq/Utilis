@@ -9,7 +9,7 @@ namespace Utilis.Extensions
 	{
 		public static string GetName<T> ( this System.Linq.Expressions.Expression<Func<T>> exp )
 		{
-			System.Linq.Expressions.MemberExpression memberExp = exp.Body as System.Linq.Expressions.MemberExpression;
+			System.Linq.Expressions.MemberExpression? memberExp = exp.Body as System.Linq.Expressions.MemberExpression;
 			if ( memberExp == null )
 				throw new Exception ( "Body of lamba must be a member access." );
 
@@ -21,7 +21,7 @@ namespace Utilis.Extensions
 			if ( exp.NodeType != System.Linq.Expressions.ExpressionType.Lambda )
 				throw new Exception ( "Expression must be a lambda" );
 
-			System.Linq.Expressions.MemberExpression memberExp = exp.Body as System.Linq.Expressions.MemberExpression;
+			System.Linq.Expressions.MemberExpression? memberExp = exp.Body as System.Linq.Expressions.MemberExpression;
 			if ( memberExp == null )
 				throw new Exception ( "Body of lamba must be a property access." );
 

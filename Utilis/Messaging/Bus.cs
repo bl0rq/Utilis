@@ -37,10 +37,10 @@ namespace Utilis.Messaging
         {
             Contract.AssertNotNull ( ( ) => message, message );
 
-            Array listeners = null;
+            Array? listeners = null;
             m_rwlListeners.ReadLocked ( ( ) =>
             {
-                System.Collections.IList listenersRaw = m_listenersByMessageType.SafeGet ( message.GetType ( ) );
+                System.Collections.IList? listenersRaw = m_listenersByMessageType.SafeGet ( message.GetType ( ) );
                 if ( listenersRaw != null )
                 {
                     lock ( listenersRaw )
@@ -145,7 +145,7 @@ namespace Utilis.Messaging
         }
 
         public bool IsMessageLoggingEnabled { get; set; }
-        public IFabric Fabric { get; set; }
+        public IFabric? Fabric { get; set; }
     }
 
     [AttributeUsage ( AttributeTargets.Class, Inherited = false, AllowMultiple = false )]

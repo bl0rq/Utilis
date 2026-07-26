@@ -63,7 +63,7 @@ namespace Utilis.Extensions
             return sb.ToString ( );
         }
 
-        public static T AddMagicNumber<T> ( this T ex, ulong magic ) where T : Exception
+        public static T? AddMagicNumber<T> ( this T? ex, ulong magic ) where T : Exception
         {
             if ( ex != null )
                 ex.Data [ "MagicNumber" ] = magic;

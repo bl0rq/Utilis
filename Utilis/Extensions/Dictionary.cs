@@ -7,9 +7,15 @@ namespace Utilis.Extensions
 {
     public static class DictionaryExtensions
     {
-        public static T_Value SafeGet<T_Key, T_Value> ( this IDictionary<T_Key, T_Value> oDictionary, T_Key sKey )
+        public static T_Value SafeGet<T_Key, T_Value> ( this IDictionary<T_Key, T_Value>? oDictionary, T_Key sKey ) where T_Key : notnull
         {
-            return oDictionary.SafeGet ( sKey, ( ) => default ( T_Value ), false );
+            if ( oDictionary == null ) return default!;
+
+            T_Value? value = default;
+            if ( oDictionary.TryGetValue ( sKey, out value ) )
+                return value!;
+
+            return default!;
         }
 
         //public static T_Value SafeGet<T_Key, T_Value> ( this IDictionary<T_Key, T_Value> oDictionary, T_Key sKey, System.Threading.ReaderWriterLockSlim rwlLock )
@@ -25,13 +31,13 @@ namespace Utilis.Extensions
         //	return oReturn;
         //}
 
-        public static T_Value SafeGet<T_Key, T_Value> ( this IDictionary<T_Key, T_Value> oDictionary, T_Key sKey, Func<T_Value> fnGetDefault, bool bAddDefault )
+        public static T_Value SafeGet<T_Key, T_Value> ( this IDictionary<T_Key, T_Value>? oDictionary, T_Key sKey, Func<T_Value> fnGetDefault, bool bAddDefault ) where T_Key : notnull
         {
             if ( oDictionary == null ) return fnGetDefault ( );
 
-            T_Value value;
+            T_Value? value = default;
             if ( oDictionary.TryGetValue ( sKey, out value ) )
-                return value;
+                return value!;
             else
             {
                 T_Value oDefault = fnGetDefault ( );
@@ -73,7 +79,7 @@ namespace Utilis.Extensions
         //	return value;
         //}
 
-        public static void AddRange<T_Key, T_Value> ( this Dictionary<T_Key, List<T_Value>> ht, T_Key key, IEnumerable<T_Value> aValues )
+        public static void AddRange<T_Key, T_Value> ( this Dictionary<T_Key, List<T_Value>> ht, T_Key key, IEnumerable<T_Value> aValues ) where T_Key : notnull
         {
             foreach ( T_Value value in aValues )
             {
@@ -81,7 +87,7 @@ namespace Utilis.Extensions
             }
         }
 
-        public static void Add<T_Key, T_Value> ( this Dictionary<T_Key, IList<T_Value>> ht, T_Key key, T_Value value )
+        public static void Add<T_Key, T_Value> ( this Dictionary<T_Key, IList<T_Value>> ht, T_Key key, T_Value value ) where T_Key : notnull
         {
             Add (
                 ht,
@@ -92,7 +98,7 @@ namespace Utilis.Extensions
                 value );
         }
 
-        public static void Add<T_Key, T_Value> ( this Dictionary<T_Key, List<T_Value>> ht, T_Key key, T_Value value )
+        public static void Add<T_Key, T_Value> ( this Dictionary<T_Key, List<T_Value>> ht, T_Key key, T_Value value ) where T_Key : notnull
         {
             Add (
                 ht,
@@ -102,7 +108,7 @@ namespace Utilis.Extensions
                 value );
         }
 
-        public static void Remove<T_Key, T_Value> ( this Dictionary<T_Key, List<T_Value>> ht, T_Key key, T_Value value )
+        public static void Remove<T_Key, T_Value> ( this Dictionary<T_Key, List<T_Value>> ht, T_Key key, T_Value value ) where T_Key : notnull
         {
             Remove (
                 ht,
@@ -112,7 +118,7 @@ namespace Utilis.Extensions
                 list => list.Count );
         }
 
-        public static void Add<T_Key, T_Value, T_Collection> ( this Dictionary<T_Key, T_Collection> ht, T_Key key, T_Value value ) where T_Collection : IList<T_Value>, new ( )
+        public static void Add<T_Key, T_Value, T_Collection> ( this Dictionary<T_Key, T_Collection> ht, T_Key key, T_Value value ) where T_Key : notnull where T_Collection : IList<T_Value>, new ( )
         {
             Add (
                 ht,
@@ -122,7 +128,7 @@ namespace Utilis.Extensions
                 value );
         }
 
-        public static void Remove<T_Key, T_Value> ( this Dictionary<T_Key, System.Collections.IList> ht, T_Key key, T_Value value )
+        public static void Remove<T_Key, T_Value> ( this Dictionary<T_Key, System.Collections.IList> ht, T_Key key, T_Value value ) where T_Key : notnull
         {
             Remove (
                 ht,
@@ -137,7 +143,7 @@ namespace Utilis.Extensions
             T_Key key,
             Action<T_Collection, T_Value> add,
             Func<T_Collection, T_Value, bool> contains,
-            T_Value value ) where T_Collection : new ( )
+            T_Value value ) where T_Key : notnull where T_Collection : new ( )
         {
             Add (
                 ht,
@@ -154,9 +160,9 @@ namespace Utilis.Extensions
             Func<T_Collection> createCollection,
             Action<T_Collection, T_Value> add,
             Func<T_Collection, T_Value, bool> contains,
-            T_Value value )
+            T_Value value ) where T_Key : notnull
         {
-            T_Collection list = default ( T_Collection );
+            T_Collection list = default!;
             if ( !ht.ContainsKey ( key ) )
             {
                 list = createCollection ( );
@@ -177,7 +183,7 @@ namespace Utilis.Extensions
             T_Key key,
             T_Value value,
             Action<T_Collection, T_Value> remove,
-            Func<T_Collection, int> count )
+            Func<T_Collection, int> count ) where T_Key : notnull
         {
             if ( ht.ContainsKey ( key ) )
             {
@@ -189,7 +195,7 @@ namespace Utilis.Extensions
             }
         }
 
-        public static bool Contains<T_Key, T_Value> ( this Dictionary<T_Key, List<T_Value>> ht, T_Key key, T_Value value ) where T_Value : class //, IEquatable<T_Value>
+        public static bool Contains<T_Key, T_Value> ( this Dictionary<T_Key, List<T_Value>> ht, T_Key key, T_Value value ) where T_Key : notnull where T_Value : class //, IEquatable<T_Value>
         {
             if ( ht.ContainsKey ( key ) )
                 return ht [ key ].Any ( itm => itm == value );

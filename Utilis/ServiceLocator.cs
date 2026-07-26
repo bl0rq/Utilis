@@ -20,14 +20,14 @@ namespace Utilis
 
     public class ServiceLocator : CommonServiceLocator.ServiceLocatorImplBase, IServiceLocator, Messaging.IListener<Messaging.AppShutdownMessage>
     {
-        public static IServiceLocator Instance
+        public static IServiceLocator? Instance
         {
             get;
             set;
         }
 
         private readonly Autofac.IContainer m_container;
-        private IDisposable m_busToken;
+        private IDisposable? m_busToken;
 
         private readonly Dictionary<Type, object> m_additionalTypes = new Dictionary<Type, object> ( );
 
@@ -46,7 +46,7 @@ namespace Utilis
                 m_additionalTypes.SafeGet ( serviceType )
                 ?? ( key != null
                     ? m_container.Resolve ( serviceType, new [] { new NamedParameter ( "key", key ) } )
-                    : m_container.SafeResolve ( serviceType ) );
+                    : m_container.SafeResolve ( serviceType )! );
         }
 
         protected override IEnumerable<object> DoGetAllInstances ( Type serviceType )
@@ -59,7 +59,7 @@ namespace Utilis
 
         public void Receive ( Messaging.AppShutdownMessage message )
         {
-            m_busToken.DisposeWithCare ( );
+            m_busToken?.DisposeWithCare ( );
             m_busToken = null;
 
             m_container.ComponentRegistry.DisposeWithCare ( );
@@ -69,7 +69,7 @@ namespace Utilis
         {
             lock ( m_additionalTypes )
             {
-                m_additionalTypes [ typeof ( T ) ] = o;
+                m_additionalTypes [ typeof ( T ) ] = o!;
             }
         }
 
@@ -84,9 +84,9 @@ namespace Utilis
 
     public static class ComponentContextExtensions
     {
-        public static object SafeResolve ( this Autofac.IComponentContext context, Type serviceType )
+        public static object? SafeResolve ( this Autofac.IComponentContext context, Type serviceType )
         {
-            object o;
+            object? o;
             if ( context.TryResolve ( serviceType, out o ) )
                 return o;
             else

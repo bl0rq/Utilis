@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>Brad Buhrkuhl</Authors>
     <Company>Blorq Industries</Company>
     <Description>Basic utility-level functions, mostly in support of a MVVM pattern for Desktop, Windows Store, and Windows Phone applications.  Source can be found at https://github.com/bl0rq/Utilis</Description>
-    <PackageLicenseExpression>http://opensource.org/licenses/MS-PL</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/bl0rq/Utilis</PackageProjectUrl>
     <RepositoryUrl>https://github.com/bl0rq/Utilis</RepositoryUrl>
-    <Version>0.9.0.98</Version>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
   <ItemGroup>
@@ -56,9 +56,9 @@
     <Compile Include="UI\ViewModel\Base.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-    <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
+    <PackageReference Include="Autofac" Version="9.3.1" />
+    <PackageReference Include="GitVersion.MsBuild" Version="6.4.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.10" />
   </ItemGroup>
   <ItemGroup Label="Expose internal test hooks to Unit Test projects">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">

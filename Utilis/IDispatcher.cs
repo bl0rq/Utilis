@@ -33,7 +33,7 @@ namespace Utilis.Test
         public Task RunAsync ( Action act )
         {
             act ( );
-            return Task.FromResult<object> ( null );
+            return Task.CompletedTask;
         }
     }
 }
