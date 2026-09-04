@@ -1,5 +1,7 @@
 <Project>
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Human-controlled major.minor. Patch is assigned at NuGet release from git tags (first 0.11 release is 0.11.1). -->
+    <VersionPrefix>0.11</VersionPrefix>
   </PropertyGroup>
 </Project>
