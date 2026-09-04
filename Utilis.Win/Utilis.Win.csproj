@@ -12,8 +12,12 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/bl0rq/Utilis</PackageProjectUrl>
         <RepositoryUrl>https://github.com/bl0rq/Utilis</RepositoryUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     </PropertyGroup>
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Utilis\Utilis.csproj" />
     </ItemGroup>

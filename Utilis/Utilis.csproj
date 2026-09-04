@@ -9,8 +9,12 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/bl0rq/Utilis</PackageProjectUrl>
     <RepositoryUrl>https://github.com/bl0rq/Utilis</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Utilis.WinRT\UI\DelegateCommand.cs" Link="UI\DelegateCommand.cs" />
     <Compile Include="..\Utilis.WinRT\UI\Navigation\NavigationCommand.cs" Link="UI\Navigation\NavigationCommand.cs" />
